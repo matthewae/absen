@@ -37,7 +37,7 @@ class HomeController extends Controller
             ->take(10)
             ->get();
 
-        return view('home', compact(
+        return view('primary', compact(
             'totalEmployees',
             'presentToday',
             'lateToday',
