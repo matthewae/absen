@@ -25,7 +25,7 @@
                     <tbody>
                         @forelse($workProgress ?? [] as $progress)
                         <tr>
-                            <td>{{ $progress->created_at->format('d M Y H:i') }}</td>
+                            <td>{{ $progress->created_at ? $progress->created_at->format('d M Y H:i') : 'N/A' }}</td>
                             <td>{{ $progress->description }}</td>
                             <td>
                                 @if($progress->proof)
