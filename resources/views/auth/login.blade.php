@@ -257,9 +257,9 @@ pera    <script src="https://cdnjs.cloudflare.com/ajax/libs/particles.js/2.0.0/p
                     <form method="POST" action="{{ route('login') }}">
                         @csrf
                         <div class="mb-4">
-                            <label for="email" class="form-label">Staff ID</label>
-                            <input id="email" type="text" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autofocus placeholder="Enter your Staff ID" pattern="[0-9]{3,6}" title="Please enter a valid Staff ID (3-6 digits)"
-                            @error('email')
+                            <label for="staff_id" class="form-label">Staff ID</label>
+                            <input id="staff_id" type="text" class="form-control @error('staff_id') is-invalid @enderror" name="staff_id" value="{{ old('staff_id') }}" required autofocus placeholder="Enter your Staff ID" pattern="[0-9]{3,6}" title="Please enter a valid Staff ID (3-6 digits)">
+                            @error('staff_id')
                             <span class="invalid-feedback">{{ $message }}</span>
                             @enderror
                         </div>
@@ -299,23 +299,11 @@ pera    <script src="https://cdnjs.cloudflare.com/ajax/libs/particles.js/2.0.0/p
                 detect_on: 'canvas',
                 events: { onhover: { enable: true, mode: 'grab' }, onclick: { enable: true, mode: 'push' }, resize: true },
                 modes: {
-                    grab: { distance: 140, line_linked: { opacity: 0.8 } },
-                    push: { particles_nb: 6 },
-                    remove: { particles_nb: 2 }
+                    grab: { distance: 140, line_linked: { opacity: 1 } },
+                    push: { particles_nb: 4 }
                 }
             },
             retina_detect: true
-        });
-
-        document.querySelector('.card').addEventListener('mousemove', function(e) {
-            const rect = this.getBoundingClientRect();
-            const x = (e.clientX - rect.left) / rect.width - 0.5;
-            const y = (e.clientY - rect.top) / rect.height - 0.5;
-            this.style.transform = `perspective(1000px) rotateX(${y * -5}deg) rotateY(${x * 5}deg)`;
-        });
-
-        document.querySelector('.card').addEventListener('mouseleave', function() {
-            this.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg)';
         });
     </script>
 </body>

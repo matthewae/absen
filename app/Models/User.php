@@ -21,7 +21,17 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'staff_id',
+        'role',
     ];
+
+    /**
+     * Find user by staff_id for authentication
+     */
+    public static function findForAuth($staff_id)
+    {
+        return static::where('staff_id', $staff_id)->first();
+    }
 
     /**
      * The attributes that should be hidden for serialization.
