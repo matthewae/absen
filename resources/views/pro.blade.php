@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,95 +9,93 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         :root {
-            --sidebar-width: 250px;
             --primary-color: #2c3e50;
+            --secondary-color: #34495e;
+            --accent-color: #FFD700;
+            --text-color: #2c3e50;
+            --bg-light: #f8f9fa;
+            --transition: all 0.3s ease;
         }
+
         body {
             background-color: #f8f9fa;
         }
-        #sidebar {
-            width: var(--sidebar-width);
+
+        .sidebar {
             min-height: 100vh;
-            background: var(--primary-color);
-            position: fixed;
-            left: 0;
-            top: 0;
-            padding: 1rem;
+            background-color: var(--primary-color);
+            color: white;
+            padding-top: 20px;
+            transition: var(--transition);
         }
-        .nav-link {
-            color: rgba(255,255,255,0.8);
-            padding: 0.75rem 1rem;
-            border-radius: 0.5rem;
-            transition: all 0.3s ease;
+
+        .sidebar .nav-link {
+            color: rgba(255, 255, 255, 0.8);
+            padding: 12px 20px;
+            margin: 5px 15px;
+            border-radius: 8px;
+            transition: var(--transition);
+            font-weight: 500;
         }
-        .nav-link:hover, .nav-link.active {
-            background: rgba(255,255,255,0.1);
-            color: #FFD700;
+
+        .sidebar .nav-link:hover, .sidebar .nav-link.active {
+            background-color: var(--secondary-color);
+            color: var(--accent-color);
+            transform: translateX(5px);
         }
+
         .main-content {
-            margin-left: var(--sidebar-width);
-            padding: 2rem;
+            padding: 30px;
+            background-color: var(--bg-light);
         }
+
         .card {
             border: none;
-            box-shadow: 0 0.125rem 0.25rem rgba(0,0,0,0.075);
+            box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
             border-radius: 1rem;
         }
+
         .profile-photo {
             width: 200px;
             height: 200px;
             object-fit: cover;
             border-radius: 50%;
             border: 5px solid #fff;
-            box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.15);
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
         }
     </style>
 </head>
+
 <body>
     <div class="container-fluid">
         <div class="row">
             <!-- Sidebar -->
-            <nav id="sidebar" class="col-md-3 col-lg-2 d-md-block sidebar collapse">
+            <nav class="col-md-2 sidebar">
                 <div class="position-sticky">
-                    <h4 class="text-white mb-4">{{ config('app.name', 'Laravel') }}</h4>
-                    <ul class="nav flex-column">
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ route('primary') }}">
-                                <i class="fas fa-home me-2"></i>
-                                Dashboard
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ route('attendance.index') }}">
-                                <i class="fas fa-clock me-2"></i>
-                                Attendance
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ route('schedule') }}">
-                                <i class="fas fa-calendar me-2"></i>
-                                Schedule
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ route('work-progress') }}">
-                                <i class="fas fa-tasks me-2"></i>
-                                Work Progress
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link active" href="{{ route('profile.index') }}">
-                                <i class="fas fa-user me-2"></i>
-                                Profile
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ route('settings') }}">
-                                <i class="fas fa-cog me-2"></i>
-                                Settings
-                            </a>
-                        </li>
-                    </ul>
+                    <h4>PT. Mandajaya</h4>
+                    <nav class="nav flex-column">
+                        <a class="nav-link {{ request()->routeIs('primary') ? 'active' : '' }}" href="{{ route('primary') }}">
+                            <i class="fas fa-home"></i> Dashboard
+                        </a>
+                        <a class="nav-link {{ request()->routeIs('attendance.index') ? 'active' : '' }}" href="{{ route('attendance.index') }}">
+                            <i class="fas fa-clock"></i> Attendance
+                        </a>
+                        <a class="nav-link {{ request()->routeIs('schedule') ? 'active' : '' }}" href="{{ route('schedule') }}">
+                            <i class="fas fa-calendar"></i> Schedule
+                        </a>
+                        <a class="nav-link {{ request()->routeIs('profile.index') ? 'active' : '' }}" href="{{ route('profile.index') }}">
+                            <i class="fas fa-user"></i> Profile
+                        </a>
+                        <a class="nav-link {{ request()->routeIs('settings.index') ? 'active' : '' }}" href="{{ route('set') }}">
+                            <i class="fas fa-cog"></i> Settings
+                        </a>
+                        <form action="{{ route('logout') }}" method="POST" class="mt-auto">
+                            @csrf
+                            <button type="submit" class="nav-link text-danger border-0 bg-transparent">
+                                <i class="fas fa-sign-out-alt"></i> Logout
+                            </button>
+                        </form>
+                    </nav>
                 </div>
             </nav>
 
@@ -110,9 +109,9 @@
                     <div class="col-md-4 text-center mb-4">
                         <div class="card">
                             <div class="card-body">
-                                <img src="{{ asset('storage/profile-photos/' . Auth::user()->photo) }}" 
-                                     alt="Profile Photo" 
-                                     class="profile-photo mb-3">
+                                <img src="{{ asset('storage/profile-photos/' . Auth::user()->photo) }}"
+                                    alt="Profile Photo"
+                                    class="profile-photo mb-3">
                                 <h4 class="card-title">{{ Auth::user()->name }}</h4>
                                 <p class="card-text text-muted">{{ Auth::user()->email }}</p>
                             </div>
@@ -180,4 +179,5 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>
