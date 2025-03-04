@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -56,7 +57,8 @@
             align-items: center;
         }
 
-        .nav-link:hover, .nav-link.active {
+        .nav-link:hover,
+        .nav-link.active {
             background-color: var(--secondary-color);
             color: var(--accent-color);
             transform: translateX(5px);
@@ -137,28 +139,33 @@
         }
     </style>
 </head>
+
 <body>
-    <div class="sidebar">
-        <h4>{{ config('app.name', 'Laravel') }}</h4>
+    <!-- Sidebar -->
+    <div class="col-md-2 sidebar">
+        <h4>PT. Mandajaya</h4>
         <nav class="nav flex-column">
-            <a href="{{ route('primary') }}" class="nav-link {{ request()->routeIs('primary') ? 'active' : '' }}">
+            <a class="nav-link {{ request()->routeIs('primary') ? 'active' : '' }}" href="{{ route('primary') }}">
                 <i class="fas fa-home"></i> Dashboard
             </a>
-            <a href="{{ route('attend') }}" class="nav-link {{ request()->routeIs('attend') ? 'active' : '' }}">
+            <a class="nav-link {{ request()->routeIs('attend') ? 'active' : '' }}" href="{{ route('attend') }}">
                 <i class="fas fa-clock"></i> Attendance
             </a>
-            <a href="{{ route('jdwl') }}" class="nav-link {{ request()->routeIs('jdwl') ? 'active' : '' }}">
+            <a class="nav-link {{ request()->routeIs('jdwl') ? 'active' : '' }}" href="{{ route('jdwl') }}">
                 <i class="fas fa-calendar"></i> Schedule
             </a>
             <a href="{{ route('work-progress') }}" class="nav-link {{ request()->routeIs('work-progress') ? 'active' : '' }}">
                 <i class="fas fa-tasks"></i> Work Progress
             </a>
-            <a href="{{ route('set') }}" class="nav-link {{ request()->routeIs('set') ? 'active' : '' }}">
+            <a class="nav-link {{ request()->routeIs('pro') ? 'active' : '' }}" href="{{ route('pro') }}">
+                <i class="fas fa-user"></i> Profile
+            </a>
+            <a class="nav-link {{ request()->routeIs('set') ? 'active' : '' }}" href="{{ route('set') }}">
                 <i class="fas fa-cog"></i> Settings
             </a>
             <form action="{{ route('logout') }}" method="POST" class="mt-auto">
                 @csrf
-                <button type="submit" class="nav-link text-danger border-0 bg-transparent w-100 text-start">
+                <button type="submit" class="nav-link text-danger border-0 bg-transparent">
                     <i class="fas fa-sign-out-alt"></i> Logout
                 </button>
             </form>
@@ -172,15 +179,15 @@
             </div>
             <div class="card-body">
                 @if (session('status'))
-                    <div class="alert alert-success" role="alert">
-                        {{ session('status') }}
-                    </div>
+                <div class="alert alert-success" role="alert">
+                    {{ session('status') }}
+                </div>
                 @endif
 
                 @if (session('error'))
-                    <div class="alert alert-danger" role="alert">
-                        {{ session('error') }}
-                    </div>
+                <div class="alert alert-danger" role="alert">
+                    {{ session('error') }}
+                </div>
                 @endif
 
                 <form action="{{ route('work-progress.store') }}" method="POST">
@@ -189,7 +196,7 @@
                         <label for="title" class="form-label">Title</label>
                         <input type="text" class="form-control @error('title') is-invalid @enderror" id="title" name="title" required>
                         @error('title')
-                            <div class="invalid-feedback">{{ $message }}</div>
+                        <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
 
@@ -197,7 +204,7 @@
                         <label for="description" class="form-label">Description</label>
                         <textarea class="form-control @error('description') is-invalid @enderror" id="description" name="description" rows="4" required></textarea>
                         @error('description')
-                            <div class="invalid-feedback">{{ $message }}</div>
+                        <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
 
@@ -209,7 +216,7 @@
                             <option value="pending">Pending</option>
                         </select>
                         @error('status')
-                            <div class="invalid-feedback">{{ $message }}</div>
+                        <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
 
@@ -255,4 +262,5 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>

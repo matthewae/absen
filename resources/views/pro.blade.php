@@ -38,7 +38,8 @@
             font-weight: 500;
         }
 
-        .sidebar .nav-link:hover, .sidebar .nav-link.active {
+        .sidebar .nav-link:hover,
+        .sidebar .nav-link.active {
             background-color: var(--secondary-color);
             color: var(--accent-color);
             transform: translateX(5px);
@@ -70,35 +71,36 @@
     <div class="container-fluid">
         <div class="row">
             <!-- Sidebar -->
-            <nav class="col-md-2 sidebar">
-                <div class="position-sticky">
-                    <h4>PT. Mandajaya</h4>
-                    <nav class="nav flex-column">
-                        <a class="nav-link {{ request()->routeIs('primary') ? 'active' : '' }}" href="{{ route('primary') }}">
-                            <i class="fas fa-home"></i> Dashboard
-                        </a>
-                        <a class="nav-link {{ request()->routeIs('attend') ? 'active' : '' }}" href="{{ route('attend') }}">
-                            <i class="fas fa-clock"></i> Attendance
-                        </a>
-                        <a class="nav-link {{ request()->routeIs('jdwl') ? 'active' : '' }}" href="{{ route('jdwl') }}">
-                            <i class="fas fa-calendar"></i> Schedule
-                        </a>
-                        <a class="nav-link {{ request()->routeIs('pro') ? 'active' : '' }}" href="{{ route('pro') }}">
-                            <i class="fas fa-user"></i> Profile
-                        </a>
-                        <a class="nav-link {{ request()->routeIs('set') ? 'active' : '' }}" href="{{ route('set') }}">
-                            <i class="fas fa-cog"></i> Settings
-                        </a>
-                        <form action="{{ route('logout') }}" method="POST" class="mt-auto">
-                            @csrf
-                            <button type="submit" class="nav-link text-danger border-0 bg-transparent">
-                                <i class="fas fa-sign-out-alt"></i> Logout
-                            </button>
-                        </form>
-                    </nav>
-                </div>
-            </nav>
-
+            <div class="col-md-2 sidebar">
+                <h4>PT. Mandajaya</h4>
+                <nav class="nav flex-column">
+                    <a class="nav-link {{ request()->routeIs('primary') ? 'active' : '' }}" href="{{ route('primary') }}">
+                        <i class="fas fa-home"></i> Dashboard
+                    </a>
+                    <a class="nav-link {{ request()->routeIs('attend') ? 'active' : '' }}" href="{{ route('attend') }}">
+                        <i class="fas fa-clock"></i> Attendance
+                    </a>
+                    <a class="nav-link {{ request()->routeIs('jdwl') ? 'active' : '' }}" href="{{ route('jdwl') }}">
+                        <i class="fas fa-calendar"></i> Schedule
+                    </a>
+                    <a href="{{ route('work-progress') }}" class="nav-link {{ request()->routeIs('work-progress') ? 'active' : '' }}">
+                        <i class="fas fa-tasks"></i> Work Progress
+                    </a>
+                    <a class="nav-link {{ request()->routeIs('pro') ? 'active' : '' }}" href="{{ route('pro') }}">
+                        <i class="fas fa-user"></i> Profile
+                    </a>
+                    <a class="nav-link {{ request()->routeIs('set') ? 'active' : '' }}" href="{{ route('set') }}">
+                        <i class="fas fa-cog"></i> Settings
+                    </a>
+                    <form action="{{ route('logout') }}" method="POST" class="mt-auto">
+                        @csrf
+                        <button type="submit" class="nav-link text-danger border-0 bg-transparent">
+                            <i class="fas fa-sign-out-alt"></i> Logout
+                        </button>
+                    </form>
+                </nav>
+            </div>
+    
             <!-- Main content -->
             <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 main-content">
                 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -46,7 +47,8 @@
             font-weight: 500;
         }
 
-        .sidebar .nav-link:hover, .sidebar .nav-link.active {
+        .sidebar .nav-link:hover,
+        .sidebar .nav-link.active {
             background-color: var(--secondary-color);
             color: var(--accent-color);
             transform: translateX(5px);
@@ -67,14 +69,14 @@
             background: white;
             border-radius: 15px;
             padding: 25px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
             margin-bottom: 20px;
             transition: var(--transition);
         }
 
         .stats-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 8px 15px rgba(0,0,0,0.1);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
         }
 
         .stats-card h5 {
@@ -94,7 +96,7 @@
             background: white;
             border-radius: 15px;
             padding: 25px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
         }
 
         .calendar-table {
@@ -189,6 +191,7 @@
         }
     </style>
 </head>
+
 <body>
     <div class="container-fluid">
         <div class="row">
@@ -204,6 +207,9 @@
                     </a>
                     <a class="nav-link {{ request()->routeIs('jdwl') ? 'active' : '' }}" href="{{ route('jdwl') }}">
                         <i class="fas fa-calendar"></i> Schedule
+                    </a>
+                    <a href="{{ route('work-progress') }}" class="nav-link {{ request()->routeIs('work-progress') ? 'active' : '' }}">
+                        <i class="fas fa-tasks"></i> Work Progress
                     </a>
                     <a class="nav-link {{ request()->routeIs('pro') ? 'active' : '' }}" href="{{ route('pro') }}">
                         <i class="fas fa-user"></i> Profile
@@ -266,7 +272,15 @@
                 <!-- Calendar Section -->
                 <div class="calendar">
                     <div class="d-flex justify-content-between align-items-center mb-3">
-                        <h4>March 2025</h4>
+                        <div class="d-flex align-items-center">
+                            <button class="btn btn-outline-secondary me-2" id="prevMonth">
+                                <i class="fas fa-chevron-left"></i>
+                            </button>
+                            <h4 class="mb-0">March 2025</h4>
+                            <button class="btn btn-outline-secondary ms-2" id="nextMonth">
+                                <i class="fas fa-chevron-right"></i>
+                            </button>
+                        </div>
                         <div>
                             <button class="btn btn-sm btn-outline-secondary me-2">Month</button>
                             <button class="btn btn-sm btn-outline-secondary me-2">Week</button>
@@ -305,11 +319,31 @@
             let currentMonth = today.getMonth();
             let currentYear = today.getFullYear();
 
+            // Add event listeners for month navigation
+            document.getElementById('prevMonth').addEventListener('click', function() {
+                currentMonth--;
+                if (currentMonth < 0) {
+                    currentMonth = 11;
+                    currentYear--;
+                }
+                generateCalendar(currentMonth, currentYear);
+            });
+
+            document.getElementById('nextMonth').addEventListener('click', function() {
+                currentMonth++;
+                if (currentMonth > 11) {
+                    currentMonth = 0;
+                    currentYear++;
+                }
+                generateCalendar(currentMonth, currentYear);
+            });
+
             function generateCalendar(month, year) {
                 const firstDay = new Date(year, month, 1);
                 const lastDay = new Date(year, month + 1, 0);
                 const startingDay = firstDay.getDay();
                 const monthLength = lastDay.getDate();
+                const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
                 // Clear previous calendar
                 calendarBody.innerHTML = '';
@@ -332,8 +366,16 @@
                             // Empty cells after the last day
                             cell.classList.add('bg-light');
                         } else {
+                            const currentDate = new Date(year, month, date);
+                            const dayName = currentDate.toLocaleDateString('en-US', { weekday: 'short' });
+                            const isSunday = currentDate.getDay() === 0;
+                            const dateColor = isSunday ? 'text-danger' : '';
+                            
                             cell.innerHTML = `<div class="d-flex justify-content-between align-items-start p-1">
-                                                <span class="date-number">${date}</span>
+                                                <div>
+                                                    <span class="date-number ${dateColor}">${date}</span>
+                                                    <div class="small text-muted ${dateColor}">${dayName}</div>
+                                                </div>
                                                 <span class="badge bg-primary d-none">2</span>
                                             </div>
                                             <div class="event-dots"></div>`;
@@ -357,7 +399,7 @@
                             // Add click event
                             cell.addEventListener('click', function() {
                                 const selectedDate = new Date(year, month, date);
-                                alert(`Selected date: ${selectedDate.toLocaleDateString()}`); // Replace with your date selection handler
+                                showDateDetails(selectedDate);
                             });
 
                             date++;
@@ -369,22 +411,143 @@
                 }
 
                 // Update calendar header
-                document.querySelector('.calendar h4').textContent = 
-                    new Date(year, month).toLocaleString('default', { month: 'long', year: 'numeric' });
+                document.querySelector('.calendar h4').textContent = `${monthNames[month]} ${year}`;
             }
 
             // Initialize calendar
             generateCalendar(currentMonth, currentYear);
 
-            // Add event listeners for month/week/day view buttons
+            // Function to handle view changes
+            function changeView(view) {
+                const calendarContainer = document.querySelector('.calendar');
+                const today = new Date();
+
+                switch(view) {
+                    case 'month':
+                        generateCalendar(currentMonth, currentYear);
+                        break;
+                    case 'week':
+                        // Clear existing calendar
+                        calendarBody.innerHTML = '';
+                        
+                        // Get current week's Sunday
+                        const currentDate = new Date(currentYear, currentMonth, today.getDate());
+                        const firstDayOfWeek = new Date(currentDate);
+                        firstDayOfWeek.setDate(currentDate.getDate() - currentDate.getDay());
+
+                        // Create week view
+                        const weekRow = document.createElement('tr');
+                        for (let i = 0; i < 7; i++) {
+                            const cell = document.createElement('td');
+                            const currentDay = new Date(firstDayOfWeek);
+                            currentDay.setDate(firstDayOfWeek.getDate() + i);
+
+                            cell.style.height = '300px';
+                            cell.style.verticalAlign = 'top';
+                            cell.innerHTML = `
+                                <div class="p-2">
+                                    <div class="fw-bold">${currentDay.getDate()}</div>
+                                    <div class="text-muted small">${currentDay.toLocaleDateString('en-US', { weekday: 'short' })}</div>
+                                </div>
+                            `;
+
+                            if (currentDay.toDateString() === today.toDateString()) {
+                                cell.classList.add('bg-warning', 'bg-opacity-25');
+                            }
+
+                            weekRow.appendChild(cell);
+                        }
+                        calendarBody.appendChild(weekRow);
+
+                        // Update header
+                        document.querySelector('.calendar h4').textContent = `Week of ${firstDayOfWeek.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}`;
+                        break;
+                    case 'day':
+                        // Clear existing calendar
+                        calendarBody.innerHTML = '';
+                        
+                        // Create day view
+                        const dayRow = document.createElement('tr');
+                        const dayCell = document.createElement('td');
+                        dayCell.style.height = '500px';
+                        dayCell.style.width = '100%';
+                        dayCell.colSpan = 7;
+                        
+                        // Add hourly slots
+                        let hoursHtml = '';
+                        for (let hour = 0; hour < 24; hour++) {
+                            const timeString = `${hour.toString().padStart(2, '0')}:00`;
+                            hoursHtml += `
+                                <div class="hour-slot py-2 border-bottom" style="height: 60px;">
+                                    <div class="text-muted small">${timeString}</div>
+                                </div>
+                            `;
+                        }
+                        dayCell.innerHTML = hoursHtml;
+                        
+                        dayRow.appendChild(dayCell);
+                        calendarBody.appendChild(dayRow);
+
+                        // Update header
+                        document.querySelector('.calendar h4').textContent = today.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
+                        break;
+                }
+            }
+
+            // Function to show date details
+            function showDateDetails(date) {
+                const modalHtml = `
+                    <div class="modal fade" id="dateDetailsModal" tabindex="-1" aria-hidden="true">
+                        <div class="modal-dialog modal-lg">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title">${date.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="day-view">
+                                        ${Array.from({length: 24}, (_, hour) => {
+                                            const timeString = `${hour.toString().padStart(2, '0')}:00`;
+                                            return `
+                                                <div class="hour-slot py-2 border-bottom" style="height: 60px;">
+                                                    <div class="d-flex">
+                                                        <div class="text-muted small" style="width: 60px;">${timeString}</div>
+                                                        <div class="flex-grow-1 position-relative">
+                                                            <!-- Events will be dynamically added here -->
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            `;
+                                        }).join('')}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                
+                // Remove existing modal if any
+                const existingModal = document.getElementById('dateDetailsModal');
+                if (existingModal) {
+                    existingModal.remove();
+                }
+                
+                // Add the modal to the document
+                document.body.insertAdjacentHTML('beforeend', modalHtml);
+                
+                // Show the modal
+                const modal = new bootstrap.Modal(document.getElementById('dateDetailsModal'));
+                modal.show();
+            }
+
+            // Add event listeners for view buttons
             document.querySelectorAll('.btn-outline-secondary').forEach(button => {
                 button.addEventListener('click', function() {
                     const view = this.textContent.trim().toLowerCase();
-                    // Implement view switching logic here
-                    alert(`Switching to ${view} view`); // Replace with your view switching handler
+                    changeView(view);
                 });
             });
         });
     </script>
 </body>
+
 </html>

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -56,7 +57,8 @@
             align-items: center;
         }
 
-        .nav-link:hover, .nav-link.active {
+        .nav-link:hover,
+        .nav-link.active {
             background-color: var(--secondary-color);
             color: var(--accent-color);
             transform: translateX(5px);
@@ -107,28 +109,33 @@
         }
     </style>
 </head>
+
 <body>
-    <div class="sidebar">
-        <h4>{{ config('app.name', 'Laravel') }}</h4>
+    <!-- Sidebar -->
+    <div class="col-md-2 sidebar">
+        <h4>PT. Mandajaya</h4>
         <nav class="nav flex-column">
-            <a href="{{ route('primary') }}" class="nav-link {{ request()->routeIs('primary') ? 'active' : '' }}">
+            <a class="nav-link {{ request()->routeIs('primary') ? 'active' : '' }}" href="{{ route('primary') }}">
                 <i class="fas fa-home"></i> Dashboard
             </a>
-            <a href="{{ route('attend') }}" class="nav-link {{ request()->routeIs('attend') ? 'active' : '' }}">
+            <a class="nav-link {{ request()->routeIs('attend') ? 'active' : '' }}" href="{{ route('attend') }}">
                 <i class="fas fa-clock"></i> Attendance
             </a>
-            <a href="{{ route('jdwl') }}" class="nav-link {{ request()->routeIs('jdwl') ? 'active' : '' }}">
+            <a class="nav-link {{ request()->routeIs('jdwl') ? 'active' : '' }}" href="{{ route('jdwl') }}">
                 <i class="fas fa-calendar"></i> Schedule
             </a>
             <a href="{{ route('work-progress') }}" class="nav-link {{ request()->routeIs('work-progress') ? 'active' : '' }}">
                 <i class="fas fa-tasks"></i> Work Progress
             </a>
-            <a href="{{ route('set') }}" class="nav-link {{ request()->routeIs('set') ? 'active' : '' }}">
+            <a class="nav-link {{ request()->routeIs('pro') ? 'active' : '' }}" href="{{ route('pro') }}">
+                <i class="fas fa-user"></i> Profile
+            </a>
+            <a class="nav-link {{ request()->routeIs('set') ? 'active' : '' }}" href="{{ route('set') }}">
                 <i class="fas fa-cog"></i> Settings
             </a>
             <form action="{{ route('logout') }}" method="POST" class="mt-auto">
                 @csrf
-                <button type="submit" class="nav-link text-danger border-0 bg-transparent w-100 text-start">
+                <button type="submit" class="nav-link text-danger border-0 bg-transparent">
                     <i class="fas fa-sign-out-alt"></i> Logout
                 </button>
             </form>
@@ -143,15 +150,15 @@
 
             <div class="card-body p-4">
                 @if (session('status'))
-                    <div class="alert alert-success" role="alert">
-                        {{ session('status') }}
-                    </div>
+                <div class="alert alert-success" role="alert">
+                    {{ session('status') }}
+                </div>
                 @endif
 
                 @if (session('error'))
-                    <div class="alert alert-danger" role="alert">
-                        {{ session('error') }}
-                    </div>
+                <div class="alert alert-danger" role="alert">
+                    {{ session('error') }}
+                </div>
                 @endif
 
                 <div class="information-section mb-4">
@@ -174,9 +181,9 @@
                             <label for="new_email" class="form-label">{{ __('New Email Address') }}</label>
                             <input type="email" class="form-control @error('new_email') is-invalid @enderror" id="new_email" name="new_email" required>
                             @error('new_email')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
                             @enderror
                         </div>
                         <button type="submit" class="btn btn-primary">{{ __('Update Email') }}</button>
@@ -189,18 +196,18 @@
                             <label for="current_password" class="form-label">{{ __('Current Password') }}</label>
                             <input type="password" class="form-control @error('current_password') is-invalid @enderror" id="current_password" name="current_password" required>
                             @error('current_password')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
                             @enderror
                         </div>
                         <div class="mb-3">
                             <label for="new_password" class="form-label">{{ __('New Password') }}</label>
                             <input type="password" class="form-control @error('new_password') is-invalid @enderror" id="new_password" name="new_password" required>
                             @error('new_password')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
                             @enderror
                         </div>
                         <div class="mb-3">
@@ -216,4 +223,5 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>

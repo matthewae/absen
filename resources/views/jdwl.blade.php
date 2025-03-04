@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -46,7 +47,8 @@
             font-weight: 500;
         }
 
-        .sidebar .nav-link:hover, .sidebar .nav-link.active {
+        .sidebar .nav-link:hover,
+        .sidebar .nav-link.active {
             background-color: var(--secondary-color);
             color: var(--accent-color);
             transform: translateX(5px);
@@ -67,7 +69,7 @@
             background: white;
             border-radius: 15px;
             padding: 25px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
         }
 
         .table {
@@ -85,49 +87,39 @@
         }
     </style>
 </head>
+
 <body>
     <div class="container-fluid">
         <div class="row">
             <!-- Sidebar -->
-            <div class="col-md-3 col-lg-2 px-0 position-fixed sidebar">
-                <h4>{{ config('app.name', 'Laravel') }}</h4>
-                <ul class="nav flex-column">
-                    <li class="nav-item">
-                        <a class="nav-link" href="/primary">
-                            <i class="fas fa-home"></i> Dashboard
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/attend">
-                            <i class="fas fa-clock"></i> Attendance
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link active" href="/jdwl">
-                            <i class="fas fa-calendar"></i> Schedule
-                        </a>
-                    </li>
-                    <!-- <li class="nav-item">
-                        <a class="nav-link" href="/attend">
-                            <i class="fas fa-clock"></i> Attendance
-                        </a>
-                    </li> -->
-                    <li class="nav-item">
-                        <a class="nav-link" href="/pro">
-                            <i class="fas fa-user"></i> Profile
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/set">
-                            <i class="fas fa-cog"></i> Settings
-                        </a>
-                    </li>
-                    <!-- <li class="nav-item">
-                        <a class="nav-link" href="/pro">
-                            <i class="fas fa-user"></i> Profile
-                        </a>
-                    </li> -->
-                </ul>
+            <div class="col-md-2 sidebar">
+                <h4>PT. Mandajaya</h4>
+                <nav class="nav flex-column">
+                    <a class="nav-link {{ request()->routeIs('primary') ? 'active' : '' }}" href="{{ route('primary') }}">
+                        <i class="fas fa-home"></i> Dashboard
+                    </a>
+                    <a class="nav-link {{ request()->routeIs('attend') ? 'active' : '' }}" href="{{ route('attend') }}">
+                        <i class="fas fa-clock"></i> Attendance
+                    </a>
+                    <a class="nav-link {{ request()->routeIs('jdwl') ? 'active' : '' }}" href="{{ route('jdwl') }}">
+                        <i class="fas fa-calendar"></i> Schedule
+                    </a>
+                    <a href="{{ route('work-progress') }}" class="nav-link {{ request()->routeIs('work-progress') ? 'active' : '' }}">
+                        <i class="fas fa-tasks"></i> Work Progress
+                    </a>
+                    <a class="nav-link {{ request()->routeIs('pro') ? 'active' : '' }}" href="{{ route('pro') }}">
+                        <i class="fas fa-user"></i> Profile
+                    </a>
+                    <a class="nav-link {{ request()->routeIs('set') ? 'active' : '' }}" href="{{ route('set') }}">
+                        <i class="fas fa-cog"></i> Settings
+                    </a>
+                    <form action="{{ route('logout') }}" method="POST" class="mt-auto">
+                        @csrf
+                        <button type="submit" class="nav-link text-danger border-0 bg-transparent">
+                            <i class="fas fa-sign-out-alt"></i> Logout
+                        </button>
+                    </form>
+                </nav>
             </div>
 
             <!-- Main Content -->
@@ -135,9 +127,9 @@
                 <h2 class="mb-4">Schedule</h2>
                 <div class="schedule-container">
                     @if (session('status'))
-                        <div class="alert alert-success" role="alert">
-                            {{ session('status') }}
-                        </div>
+                    <div class="alert alert-success" role="alert">
+                        {{ session('status') }}
+                    </div>
                     @endif
 
                     <div class="table-responsive">
@@ -152,12 +144,12 @@
                             </thead>
                             <tbody>
                                 @foreach($attendances as $attendance)
-                                    <tr>
-                                        <td>{{ $attendance->date->format('l') }}</td>
-                                        <td>{{ $attendance->time_in ? $attendance->time_in->format('H:i') : 'N/A' }} - {{ $attendance->time_out ? $attendance->time_out->format('H:i') : 'N/A' }}</td>
-                                        <td>{{ ucfirst($attendance->notes ?? 'Regular Schedule') }}</td>
-                                        <td><span class="badge bg-{{ $attendance->status === 'present' ? 'success' : ($attendance->status === 'late' ? 'warning' : 'danger') }}">{{ ucfirst($attendance->status) }}</span></td>
-                                    </tr>
+                                <tr>
+                                    <td>{{ $attendance->date->format('l') }}</td>
+                                    <td>{{ $attendance->time_in ? $attendance->time_in->format('H:i') : 'N/A' }} - {{ $attendance->time_out ? $attendance->time_out->format('H:i') : 'N/A' }}</td>
+                                    <td>{{ ucfirst($attendance->notes ?? 'Regular Schedule') }}</td>
+                                    <td><span class="badge bg-{{ $attendance->status === 'present' ? 'success' : ($attendance->status === 'late' ? 'warning' : 'danger') }}">{{ ucfirst($attendance->status) }}</span></td>
+                                </tr>
                                 @endforeach
                             </tbody>
                         </table>
@@ -169,4 +161,5 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>

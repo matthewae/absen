@@ -21,8 +21,9 @@ class PasswordController extends Controller
             return back()->withErrors(['current_password' => 'The current password is incorrect.']);
         }
 
-        $user->password = $request->new_password;
-        $user->save();
+        $user->forceFill([
+            'password' => $request->new_password
+        ])->save();
 
         return back()->with('status', 'Password updated successfully.');
     }
