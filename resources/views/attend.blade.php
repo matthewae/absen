@@ -171,9 +171,14 @@
         <div class="card shadow">
             <div class="card-header d-flex justify-content-between align-items-center">
                 <h4 class="mb-0">{{ __('Attendance Records') }}</h4>
-                <button class="btn btn-record" data-bs-toggle="modal" data-bs-target="#recordAttendanceModal">
-                    <i class="fas fa-plus-circle me-2"></i>Record Attendance
-                </button>
+                <div>
+                    <button class="btn btn-record me-2" data-bs-toggle="modal" data-bs-target="#leaveRequestModal">
+                        <i class="fas fa-file-medical me-2"></i>Submit Leave Request
+                    </button>
+                    <button class="btn btn-record" data-bs-toggle="modal" data-bs-target="#recordAttendanceModal">
+                        <i class="fas fa-plus-circle me-2"></i>Record Attendance
+                    </button>
+                </div>
             </div>
 
             <div class="card-body p-4">
@@ -244,6 +249,50 @@
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                         <button type="submit" class="btn btn-record">Record Attendance</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Leave Request Modal -->
+    <div class="modal fade" id="leaveRequestModal" tabindex="-1" aria-labelledby="leaveRequestModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="leaveRequestModalLabel">Submit Leave Request</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form action="{{ route('attendance.leave') }}" method="POST" enctype="multipart/form-data">
+                    @csrf
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="leave_date" class="form-label">Date</label>
+                            <input type="date" class="form-control" id="leave_date" name="leave_date" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="leave_reason" class="form-label">Reason</label>
+                            <select class="form-select" id="leave_reason" name="leave_reason" required>
+                                <option value="">Select reason</option>
+                                <option value="sick">Sick Leave</option>
+                                <option value="personal">Personal Leave</option>
+                                <option value="family">Family Emergency</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="leave_notes" class="form-label">Additional Notes</label>
+                            <textarea class="form-control" id="leave_notes" name="leave_notes" rows="3"></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="leave_document" class="form-label">Supporting Document (optional)</label>
+                            <input type="file" class="form-control" id="leave_document" name="leave_document">
+                            <div class="form-text">Upload any supporting documents (e.g., medical certificate)</div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-record">Submit Request</button>
                     </div>
                 </form>
             </div>
