@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{{ config('app.name', 'Laravel') }} - Settings</title>
+    <title>{{ config('app.name', 'Laravel') }} - Work Progress</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
@@ -89,21 +89,51 @@
             padding: 1.5rem;
         }
 
-        .information-section label {
-            font-size: 0.9rem;
-            color: #6c757d;
-            margin-bottom: 0.2rem;
-        }
-
-        .information-section p {
-            font-size: 1rem;
+        .form-label {
             font-weight: 500;
             color: var(--text-color);
         }
 
-        .alert {
-            border-radius: 10px;
-            margin-bottom: 1.5rem;
+        .btn-primary {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+            padding: 10px 20px;
+            font-weight: 500;
+            transition: var(--transition);
+        }
+
+        .btn-primary:hover {
+            background-color: var(--secondary-color);
+            border-color: var(--secondary-color);
+            transform: translateY(-2px);
+        }
+
+        .table th {
+            background-color: var(--primary-color);
+            color: white;
+            font-weight: 600;
+        }
+
+        .progress-status {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-weight: 500;
+            font-size: 0.875rem;
+        }
+
+        .status-completed {
+            background-color: #28a745;
+            color: white;
+        }
+
+        .status-in-progress {
+            background-color: #ffc107;
+            color: var(--text-color);
+        }
+
+        .status-pending {
+            background-color: #dc3545;
+            color: white;
         }
     </style>
 </head>
@@ -136,12 +166,11 @@
     </div>
 
     <div class="main-content">
-        <div class="card shadow">
+        <div class="card shadow mb-4">
             <div class="card-header">
-                <h4 class="mb-0">{{ __('Settings') }}</h4>
+                <h4 class="mb-0">Submit Work Progress</h4>
             </div>
-
-            <div class="card-body p-4">
+            <div class="card-body">
                 @if (session('status'))
                     <div class="alert alert-success" role="alert">
                         {{ session('status') }}
@@ -154,16 +183,71 @@
                     </div>
                 @endif
 
-                <div class="information-section mb-4">
-                    <h5 class="border-bottom pb-2 mb-3">{{ __('User Information') }}</h5>
+                <form action="{{ route('work-progress.store') }}" method="POST">
+                    @csrf
                     <div class="mb-3">
-                        <label class="text-muted">{{ __('Name') }}</label>
-                        <p class="mb-0">{{ $user->name }}</p>
+                        <label for="title" class="form-label">Title</label>
+                        <input type="text" class="form-control @error('title') is-invalid @enderror" id="title" name="title" required>
+                        @error('title')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
                     </div>
+
                     <div class="mb-3">
-                        <label class="text-muted">{{ __('Email') }}</label>
-                        <p class="mb-0">{{ $user->email }}</p>
+                        <label for="description" class="form-label">Description</label>
+                        <textarea class="form-control @error('description') is-invalid @enderror" id="description" name="description" rows="4" required></textarea>
+                        @error('description')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
                     </div>
+
+                    <div class="mb-3">
+                        <label for="status" class="form-label">Status</label>
+                        <select class="form-select @error('status') is-invalid @enderror" id="status" name="status" required>
+                            <option value="completed">Completed</option>
+                            <option value="in-progress">In Progress</option>
+                            <option value="pending">Pending</option>
+                        </select>
+                        @error('status')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">Submit Progress</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="card shadow">
+            <div class="card-header">
+                <h4 class="mb-0">Progress History</h4>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Title</th>
+                                <th>Description</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($workProgress as $progress)
+                            <tr>
+                                <td>{{ $progress->created_at->format('Y-m-d H:i') }}</td>
+                                <td>{{ $progress->title }}</td>
+                                <td>{{ $progress->description }}</td>
+                                <td>
+                                    <span class="progress-status status-{{ $progress->status }}">
+                                        {{ ucfirst($progress->status) }}
+                                    </span>
+                                </td>
+                            </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>

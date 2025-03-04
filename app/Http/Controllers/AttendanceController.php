@@ -13,6 +13,6 @@ class AttendanceController extends Controller
             ->orderBy('created_at', 'desc')
             ->get();
 
-        return view('attendance.index', compact('attendances'));
+        return view('attend', compact('attend'));
     }
 }

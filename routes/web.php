@@ -23,13 +23,29 @@ Auth::routes(['verify' => true]);
 Route::middleware(['auth'])->group(function () {
     Route::get('/primary', function () { return view('primary'); })->name('primary');
     // Route::get('/home', function () { return view('pro'); })->name('home');
-    Route::get('/attendance', function () { return view('attendance.index'); })->name('attendance.index');
-    Route::get('/jdwl', function () { return view('jdwl'); })->name('jdwl');
-    Route::get('/work-progress', function () { return view('pro'); })->name('work-progress');
+    Route::get('/attend', function () {
+    $attend = \App\Models\Attendance::where('user_id', auth()->id())
+        ->orderBy('date', 'desc')
+        ->get();
+    return view('attend', compact('attend'));
+})->name('attend');
+    Route::post('/attendance', [App\Http\Controllers\AttendanceController::class, 'store'])->name('attendance.store');
+    Route::get('/jdwl', function () {
+        $attendances = \App\Models\Attendance::where('user_id', auth()->id())
+            ->orderBy('date', 'desc')
+            ->get();
+        return view('jdwl', ['attendances' => $attendances]);
+    })->name('jdwl');
+    Route::get('/work-progress', function () { 
+        $workProgress = \App\Models\WorkProgress::where('user_id', auth()->id())
+            ->orderBy('created_at', 'desc')
+            ->get();
+        return view('work-progress', ['workProgress' => $workProgress]); 
+    })->name('work-progress');
     Route::post('/work-progress', [App\Http\Controllers\WorkProgressController::class, 'store'])->name('work-progress.store');
     Route::put('/work-progress/{id}', [App\Http\Controllers\WorkProgressController::class, 'update'])->name('work-progress.update');
     Route::delete('/work-progress/{id}', [App\Http\Controllers\WorkProgressController::class, 'destroy'])->name('work-progress.destroy');
-    Route::get('/profile', function () { return view('pro'); })->name('profile.index');
-    Route::get('/settings', function () { return view('pro'); })->name('settings');
-    Route::get('/set', function () { return view('pro'); })->name('set');
+    Route::get('/pro', function () { return view('pro'); })->name('pro');
+    // Route::get('/settings', function () { return view('set'); })->name('set');
+    Route::get('/set', function () { return view('set', ['user' => auth()->user()]); })->name('set');
 });

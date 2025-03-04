@@ -199,16 +199,16 @@
                     <a class="nav-link {{ request()->routeIs('primary') ? 'active' : '' }}" href="{{ route('primary') }}">
                         <i class="fas fa-home"></i> Dashboard
                     </a>
-                    <a class="nav-link {{ request()->routeIs('attendance.index') ? 'active' : '' }}" href="{{ route('attendance.index') }}">
+                    <a class="nav-link {{ request()->routeIs('attend') ? 'active' : '' }}" href="{{ route('attend') }}">
                         <i class="fas fa-clock"></i> Attendance
                     </a>
                     <a class="nav-link {{ request()->routeIs('jdwl') ? 'active' : '' }}" href="{{ route('jdwl') }}">
                         <i class="fas fa-calendar"></i> Schedule
                     </a>
-                    <a class="nav-link {{ request()->routeIs('profile.index') ? 'active' : '' }}" href="{{ route('profile.index') }}">
+                    <a class="nav-link {{ request()->routeIs('pro') ? 'active' : '' }}" href="{{ route('pro') }}">
                         <i class="fas fa-user"></i> Profile
                     </a>
-                    <a class="nav-link {{ request()->routeIs('settings.index') ? 'active' : '' }}" href="{{ route('set') }}">
+                    <a class="nav-link {{ request()->routeIs('set') ? 'active' : '' }}" href="{{ route('set') }}">
                         <i class="fas fa-cog"></i> Settings
                     </a>
                     <form action="{{ route('logout') }}" method="POST" class="mt-auto">

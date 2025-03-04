@@ -69,7 +69,7 @@
                                 <a class="nav-link" href="{{ route('home') }}">{{ __('Home') }}</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="{{ route('attendance.index') }}">{{ __('Attendance') }}</a>
+                                <a class="nav-link" href="{{ route('attend') }}">{{ __('Attendance') }}</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link {{ request()->routeIs('schedule') ? 'active' : '' }}" href="{{ route('schedule') }}"><i class="fas fa-calendar"></i> {{ __('Schedule') }}</a>

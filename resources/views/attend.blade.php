@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{{ config('app.name', 'Laravel') }} - Settings</title>
+    <title>{{ config('app.name', 'Laravel') }} - Attendance</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
@@ -13,7 +13,7 @@
             --accent-color: #FFD700;
             --text-color: #2c3e50;
             --bg-light: #f8f9fa;
-            --transition: all 0.3s ease;
+            --transition: all 0.3s ease;    
         }
 
         body {
@@ -89,21 +89,46 @@
             padding: 1.5rem;
         }
 
-        .information-section label {
-            font-size: 0.9rem;
-            color: #6c757d;
-            margin-bottom: 0.2rem;
+        .table {
+            margin-bottom: 0;
         }
 
-        .information-section p {
-            font-size: 1rem;
+        .table th {
+            background-color: var(--secondary-color);
+            color: white;
+            font-weight: 600;
+        }
+
+        .btn-record {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            transition: var(--transition);
+        }
+
+        .btn-record:hover {
+            background-color: var(--secondary-color);
+            color: var(--accent-color);
+            transform: translateY(-2px);
+        }
+
+        .status-badge {
+            padding: 6px 12px;
+            border-radius: 20px;
             font-weight: 500;
-            color: var(--text-color);
+            font-size: 0.875rem;
         }
 
-        .alert {
-            border-radius: 10px;
-            margin-bottom: 1.5rem;
+        .status-in {
+            background-color: #28a745;
+            color: white;
+        }
+
+        .status-out {
+            background-color: #dc3545;
+            color: white;
         }
     </style>
 </head>
@@ -137,8 +162,11 @@
 
     <div class="main-content">
         <div class="card shadow">
-            <div class="card-header">
-                <h4 class="mb-0">{{ __('Settings') }}</h4>
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h4 class="mb-0">{{ __('Attendance Records') }}</h4>
+                <button class="btn btn-record" data-bs-toggle="modal" data-bs-target="#recordAttendanceModal">
+                    <i class="fas fa-plus-circle me-2"></i>Record Attendance
+                </button>
             </div>
 
             <div class="card-body p-4">
@@ -154,17 +182,61 @@
                     </div>
                 @endif
 
-                <div class="information-section mb-4">
-                    <h5 class="border-bottom pb-2 mb-3">{{ __('User Information') }}</h5>
-                    <div class="mb-3">
-                        <label class="text-muted">{{ __('Name') }}</label>
-                        <p class="mb-0">{{ $user->name }}</p>
-                    </div>
-                    <div class="mb-3">
-                        <label class="text-muted">{{ __('Email') }}</label>
-                        <p class="mb-0">{{ $user->email }}</p>
-                    </div>
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Check In</th>
+                                <th>Check Out</th>
+                                <th>Status</th>
+                                <th>Notes</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($attend as $attendance)
+                            <tr>
+                                <td>{{ $attendance->date->format('Y-m-d') }}</td>
+                                <td>{{ $attendance->check_in ? $attendance->check_in->format('H:i:s') : '-' }}</td>
+                                <td>{{ $attendance->check_out ? $attendance->check_out->format('H:i:s') : '-' }}</td>
+                                <td>
+                                    @if($attendance->check_in && !$attendance->check_out)
+                                        <span class="status-badge status-in">Checked In</span>
+                                    @elseif($attendance->check_in && $attendance->check_out)
+                                        <span class="status-badge status-out">Checked Out</span>
+                                    @endif
+                                </td>
+                                <td>{{ $attendance->notes ?? '-' }}</td>
+                            </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Record Attendance Modal -->
+    <div class="modal fade" id="recordAttendanceModal" tabindex="-1" aria-labelledby="recordAttendanceModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="recordAttendanceModalLabel">Record Attendance</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form action="{{ route('attendance.store') }}" method="POST">
+                    @csrf
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="notes" class="form-label">Notes (Optional)</label>
+                            <textarea class="form-control" id="notes" name="notes" rows="3" placeholder="Add any notes about your attendance..."></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-record">Record Attendance</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
