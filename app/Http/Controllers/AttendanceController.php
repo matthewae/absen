@@ -44,7 +44,8 @@ class AttendanceController extends Controller
             'user_id' => $user->id,
             'date' => $today,
             'time_in' => now(),
-            'notes' => $request->notes
+            'notes' => $request->notes,
+            'status' => 'present'
         ]);
 
         return redirect()->back()->with('status', 'Check-in recorded successfully.');

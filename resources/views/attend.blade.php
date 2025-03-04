@@ -195,23 +195,24 @@
                 @endif
 
                 <div class="table-responsive">
-                    <table class="table table-hover">
-                        <thead>
+                    <table class="table table-hover align-middle">
+                        <thead class="table-dark">
                             <tr>
-                                <th>Date</th>
-                                <th>Check In</th>
-                                <th>Check Out</th>
-                                <th>Status</th>
-                                <th>Notes</th>
+                                <th class="py-3">Date</th>
+                                <th class="py-3">Check In</th>
+                                <th class="py-3">Check Out</th>
+                                <th class="py-3">Status</th>
+                                <th class="py-3">Notes</th>
+                                <th class="py-3 text-center">Actions</th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach($attend as $attendance)
                             <tr>
-                                <td>{{ $attendance->date->format('Y-m-d') }}</td>
-                                <td>{{ $attendance->time_in ? $attendance->time_in->format('H:i:s') : '-' }}</td>
-                                <td>{{ $attendance->time_out ? $attendance->time_out->format('H:i:s') : '-' }}</td>
-                                <td>
+                                <td class="py-3">{{ $attendance->date->format('Y-m-d') }}</td>
+                                <td class="py-3">{{ $attendance->time_in ? $attendance->time_in->format('H:i:s') : '-' }}</td>
+                                <td class="py-3">{{ $attendance->time_out ? $attendance->time_out->format('H:i:s') : '-' }}</td>
+                                <td class="py-3">
                                     @if($attendance->time_in && !$attendance->time_out)
                                     <span class="status-badge status-in">Checked In</span>
                                     @elseif($attendance->time_in && $attendance->time_out)
@@ -220,7 +221,17 @@
                                     <span class="status-badge status-absent">Not Checked In</span>
                                     @endif
                                 </td>
-                                <td>{{ $attendance->notes ?? '-' }}</td>
+                                <td class="py-3">{{ $attendance->notes ?? '-' }}</td>
+                                <td class="py-3 text-center">
+                                    @if($attendance->time_in && !$attendance->time_out && $attendance->date->isToday())
+                                    <form action="{{ route('attendance.checkout') }}" method="POST" class="d-inline">
+                                        @csrf
+                                        <button type="submit" class="btn btn-warning btn-sm">
+                                            <i class="fas fa-sign-out-alt me-1"></i>Check Out
+                                        </button>
+                                    </form>
+                                    @endif
+                                </td>
                             </tr>
                             @endforeach
                         </tbody>

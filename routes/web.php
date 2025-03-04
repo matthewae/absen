@@ -30,6 +30,7 @@ Route::middleware(['auth'])->group(function () {
     return view('attend', compact('attend'));
 })->name('attend');
     Route::post('/attendance', [App\Http\Controllers\AttendanceController::class, 'store'])->name('attendance.store');
+    Route::post('/attendance/checkout', [App\Http\Controllers\AttendanceController::class, 'store'])->name('attendance.checkout');
     Route::post('/attendance/leave', [App\Http\Controllers\AttendanceController::class, 'leave'])->name('attendance.leave');
     Route::get('/jdwl', function () {
         $attendances = \App\Models\Attendance::where('user_id', auth()->id())

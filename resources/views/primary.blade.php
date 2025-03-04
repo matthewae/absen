@@ -232,9 +232,12 @@
                 <div class="d-flex justify-content-between align-items-center mb-4">
                     <h2>Welcome back, {{ Auth::user()->name }}!</h2>
                     <div class="quick-actions">
-                        <button class="btn btn-primary me-2">
-                            <i class="fas fa-plus"></i> Record Attendance
-                        </button>
+                        <form action="{{ route('attendance.store') }}" method="POST" class="d-inline">
+                            @csrf
+                            <button type="submit" class="btn btn-primary me-2">
+                                <i class="fas fa-plus"></i> Record Attendance
+                            </button>
+                        </form>
                         <button class="btn btn-outline-primary">
                             <i class="fas fa-calendar-plus"></i> View Schedule
                         </button>

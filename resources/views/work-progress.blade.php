@@ -190,11 +190,11 @@
                 </div>
                 @endif
 
-                <form action="{{ route('work-progress.store') }}" method="POST">
+                <form action="{{ route('work-progress.store') }}" method="POST" enctype="multipart/form-data" id="progressForm">
                     @csrf
                     <div class="mb-3">
                         <label for="title" class="form-label">Title</label>
-                        <input type="text" class="form-control @error('title') is-invalid @enderror" id="title" name="title" required>
+                        <input type="text" class="form-control @error('title') is-invalid @enderror" id="title" name="title" value="{{ old('title') }}" required>
                         @error('title')
                         <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
@@ -202,7 +202,7 @@
 
                     <div class="mb-3">
                         <label for="description" class="form-label">Description</label>
-                        <textarea class="form-control @error('description') is-invalid @enderror" id="description" name="description" rows="4" required></textarea>
+                        <textarea class="form-control @error('description') is-invalid @enderror" id="description" name="description" rows="4" required>{{ old('description') }}</textarea>
                         @error('description')
                         <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
@@ -211,17 +211,95 @@
                     <div class="mb-3">
                         <label for="status" class="form-label">Status</label>
                         <select class="form-select @error('status') is-invalid @enderror" id="status" name="status" required>
-                            <option value="completed">Completed</option>
-                            <option value="in-progress">In Progress</option>
-                            <option value="pending">Pending</option>
+                            <option value="completed" {{ old('status') == 'completed' ? 'selected' : '' }}>Completed</option>
+                            <option value="in-progress" {{ old('status') == 'in-progress' ? 'selected' : '' }}>In Progress</option>
+                            <option value="pending" {{ old('status') == 'pending' ? 'selected' : '' }}>Pending</option>
                         </select>
                         @error('status')
                         <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
 
-                    <button type="submit" class="btn btn-primary">Submit Progress</button>
+                    <div class="mb-3">
+                        <label for="attachment" class="form-label">Progress Document</label>
+                        <input type="file" class="form-control @error('attachment') is-invalid @enderror" id="attachment" name="attachment" accept=".pdf,.doc,.docx,.xls,.xlsx,.png,.jpg,.jpeg" required>
+                        @error('attachment')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                        <div id="filePreview" class="mt-2 d-none">
+                            <img src="" alt="Preview" class="img-thumbnail" style="max-height: 200px">
+                            <p class="file-name mt-2"></p>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary" id="submitBtn" disabled>Submit Progress</button>
                 </form>
+
+                <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                    const attachmentInput = document.getElementById('attachment');
+                    const submitBtn = document.getElementById('submitBtn');
+                    const imagePreview = document.getElementById('imagePreview');
+                    const previewImg = imagePreview.querySelector('img');
+
+                    attachmentInput.addEventListener('change', function() {
+                        if (this.files && this.files[0]) {
+                            const file = this.files[0];
+                            const filePreview = document.getElementById('filePreview');
+                            const previewImg = filePreview.querySelector('img');
+                            const fileName = filePreview.querySelector('.file-name');
+                            
+                            if (file.type.startsWith('image/')) {
+                                const reader = new FileReader();
+                                reader.onload = function(e) {
+                                    previewImg.src = e.target.result;
+                                    previewImg.style.display = 'block';
+                                    fileName.textContent = file.name;
+                                    filePreview.classList.remove('d-none');
+                                    submitBtn.disabled = false;
+                                }
+                                reader.readAsDataURL(file);
+                            } else {
+                                previewImg.style.display = 'none';
+                                fileName.textContent = file.name;
+                                filePreview.classList.remove('d-none');
+                                submitBtn.disabled = false;
+                            }
+                        } else {
+                            filePreview.classList.add('d-none');
+                            previewImg.src = '';
+                            fileName.textContent = '';
+                            submitBtn.disabled = true;
+                        }
+                    });
+
+                    document.getElementById('progressForm').addEventListener('reset', function() {
+                        imagePreview.classList.add('d-none');
+                        previewImg.src = '';
+                        submitBtn.disabled = true;
+                    });
+
+                    // Enable form submission when all required fields are filled
+                    const form = document.getElementById('progressForm');
+                    const requiredInputs = form.querySelectorAll('[required]');
+                    
+                    function checkFormValidity() {
+                        let isValid = true;
+                        requiredInputs.forEach(input => {
+                            if (!input.value) isValid = false;
+                        });
+                        submitBtn.disabled = !isValid;
+                    }
+
+                    requiredInputs.forEach(input => {
+                        input.addEventListener('input', checkFormValidity);
+                        input.addEventListener('change', checkFormValidity);
+                    });
+
+                    // Initial check
+                    checkFormValidity();
+                });
+                </script>
             </div>
         </div>
 
