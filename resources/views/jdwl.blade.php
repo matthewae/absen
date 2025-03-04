@@ -98,13 +98,23 @@
                         </a>
                     </li>
                     <li class="nav-item">
+                        <a class="nav-link" href="/attend">
+                            <i class="fas fa-clock"></i> Attendance
+                        </a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link active" href="/jdwl">
                             <i class="fas fa-calendar"></i> Schedule
                         </a>
                     </li>
-                    <li class="nav-item">
+                    <!-- <li class="nav-item">
                         <a class="nav-link" href="/attend">
                             <i class="fas fa-clock"></i> Attendance
+                        </a>
+                    </li> -->
+                    <li class="nav-item">
+                        <a class="nav-link" href="/pro">
+                            <i class="fas fa-user"></i> Profile
                         </a>
                     </li>
                     <li class="nav-item">
@@ -112,11 +122,11 @@
                             <i class="fas fa-cog"></i> Settings
                         </a>
                     </li>
-                    <li class="nav-item">
+                    <!-- <li class="nav-item">
                         <a class="nav-link" href="/pro">
-                            <i class="fas fa-cog"></i> Profile
+                            <i class="fas fa-user"></i> Profile
                         </a>
-                    </li>
+                    </li> -->
                 </ul>
             </div>
 

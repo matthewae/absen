@@ -161,9 +161,54 @@
                         <p class="mb-0">{{ $user->name }}</p>
                     </div>
                     <div class="mb-3">
-                        <label class="text-muted">{{ __('Email') }}</label>
+                        <label class="text-muted">{{ __('Current Email') }}</label>
                         <p class="mb-0">{{ $user->email }}</p>
                     </div>
+                </div>
+
+                <div class="update-section mb-4">
+                    <h5 class="border-bottom pb-2 mb-3">{{ __('Update Email') }}</h5>
+                    <form action="{{ route('update.email') }}" method="POST" class="mb-4">
+                        @csrf
+                        <div class="mb-3">
+                            <label for="new_email" class="form-label">{{ __('New Email Address') }}</label>
+                            <input type="email" class="form-control @error('new_email') is-invalid @enderror" id="new_email" name="new_email" required>
+                            @error('new_email')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
+                        </div>
+                        <button type="submit" class="btn btn-primary">{{ __('Update Email') }}</button>
+                    </form>
+
+                    <h5 class="border-bottom pb-2 mb-3">{{ __('Change Password') }}</h5>
+                    <form action="{{ route('password.update') }}" method="POST">
+                        @csrf
+                        <div class="mb-3">
+                            <label for="current_password" class="form-label">{{ __('Current Password') }}</label>
+                            <input type="password" class="form-control @error('current_password') is-invalid @enderror" id="current_password" name="current_password" required>
+                            @error('current_password')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
+                        </div>
+                        <div class="mb-3">
+                            <label for="new_password" class="form-label">{{ __('New Password') }}</label>
+                            <input type="password" class="form-control @error('new_password') is-invalid @enderror" id="new_password" name="new_password" required>
+                            @error('new_password')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
+                        </div>
+                        <div class="mb-3">
+                            <label for="new_password_confirmation" class="form-label">{{ __('Confirm New Password') }}</label>
+                            <input type="password" class="form-control" id="new_password_confirmation" name="new_password_confirmation" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">{{ __('Change Password') }}</button>
+                    </form>
                 </div>
             </div>
         </div>

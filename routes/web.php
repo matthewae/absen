@@ -48,4 +48,6 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/pro', function () { return view('pro'); })->name('pro');
     // Route::get('/settings', function () { return view('set'); })->name('set');
     Route::get('/set', function () { return view('set', ['user' => auth()->user()]); })->name('set');
+    Route::post('/update-email', [App\Http\Controllers\UserController::class, 'updateEmail'])->name('update.email');
+    Route::post('/update-password', [App\Http\Controllers\PasswordController::class, 'update'])->name('password.update');
 });
