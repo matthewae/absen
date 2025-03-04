@@ -204,13 +204,15 @@
                             @foreach($attend as $attendance)
                             <tr>
                                 <td>{{ $attendance->date->format('Y-m-d') }}</td>
-                                <td>{{ $attendance->check_in ? $attendance->check_in->format('H:i:s') : '-' }}</td>
-                                <td>{{ $attendance->check_out ? $attendance->check_out->format('H:i:s') : '-' }}</td>
+                                <td>{{ $attendance->time_in ? $attendance->time_in->format('H:i:s') : '-' }}</td>
+                                <td>{{ $attendance->time_out ? $attendance->time_out->format('H:i:s') : '-' }}</td>
                                 <td>
-                                    @if($attendance->check_in && !$attendance->check_out)
+                                    @if($attendance->time_in && !$attendance->time_out)
                                     <span class="status-badge status-in">Checked In</span>
-                                    @elseif($attendance->check_in && $attendance->check_out)
+                                    @elseif($attendance->time_in && $attendance->time_out)
                                     <span class="status-badge status-out">Checked Out</span>
+                                    @else
+                                    <span class="status-badge status-absent">Not Checked In</span>
                                     @endif
                                 </td>
                                 <td>{{ $attendance->notes ?? '-' }}</td>

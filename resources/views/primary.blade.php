@@ -399,7 +399,7 @@
                             // Add click event
                             cell.addEventListener('click', function() {
                                 const selectedDate = new Date(year, month, date);
-                                showDateDetails(selectedDate);
+                                handleDateClick(selectedDate);
                             });
 
                             date++;
@@ -494,49 +494,10 @@
                 }
             }
 
-            // Function to show date details
-            function showDateDetails(date) {
-                const modalHtml = `
-                    <div class="modal fade" id="dateDetailsModal" tabindex="-1" aria-hidden="true">
-                        <div class="modal-dialog modal-lg">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title">${date.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</h5>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                </div>
-                                <div class="modal-body">
-                                    <div class="day-view">
-                                        ${Array.from({length: 24}, (_, hour) => {
-                                            const timeString = `${hour.toString().padStart(2, '0')}:00`;
-                                            return `
-                                                <div class="hour-slot py-2 border-bottom" style="height: 60px;">
-                                                    <div class="d-flex">
-                                                        <div class="text-muted small" style="width: 60px;">${timeString}</div>
-                                                        <div class="flex-grow-1 position-relative">
-                                                            <!-- Events will be dynamically added here -->
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            `;
-                                        }).join('')}
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    `;
-                
-                // Remove existing modal if any
-                const existingModal = document.getElementById('dateDetailsModal');
-                if (existingModal) {
-                    existingModal.remove();
-                }
-                
-                // Add the modal to the document
-                document.body.insertAdjacentHTML('beforeend', modalHtml);
-                
-                // Show the modal
-                const modal = new bootstrap.Modal(document.getElementById('dateDetailsModal'));
-                modal.show();
+            // Function to handle date clicks
+            function handleDateClick(date) {
+                console.log('Selected date:', date.toLocaleDateString());
+                // Add your custom date click handling logic here
             }
 
             // Add event listeners for view buttons
