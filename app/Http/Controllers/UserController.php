@@ -8,6 +8,11 @@ use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
 {
+    /**
+     * Update user's email address
+     * @param Request $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function updateEmail(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -21,6 +26,7 @@ class UserController extends Controller
                 ->withInput();
         }
 
+        /** @var \App\Models\User $user */
         $user = Auth::user();
         $user->email = $request->new_email;
         $user->save();
@@ -28,5 +34,29 @@ class UserController extends Controller
         return redirect()
             ->route('set')
             ->with('status', 'Email updated successfully!');
+    }
+
+    /**
+     * Update user's profile photo
+     * @param Request $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function updatePhoto(Request $request)
+    {
+        $request->validate([
+            'photo' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048'
+        ]);
+
+        /** @var \App\Models\User $user */
+        $user = Auth::user();
+        $photo = $request->file('photo');
+        $photoContent = base64_encode(file_get_contents($photo->getRealPath()));
+        
+        $user->photo_path = $photoContent;
+        $user->save();
+
+        return redirect()
+            ->route('pro')
+            ->with('status', 'Profile photo updated successfully!');
     }
 }

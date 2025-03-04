@@ -111,9 +111,20 @@
                     <div class="col-md-4 text-center mb-4">
                         <div class="card">
                             <div class="card-body">
-                                <img src="{{ asset('storage/profile-photos/' . Auth::user()->photo) }}"
+                                <img src="{{ Storage::url(Auth::user()->photo_path) }}"
                                     alt="Profile Photo"
                                     class="profile-photo mb-3">
+                                <form action="{{ route('profile.update-photo') }}" method="POST" enctype="multipart/form-data" class="mb-3">
+                                    @csrf
+                                    @method('PUT')
+                                    <div class="input-group">
+                                        <input type="file" class="form-control" name="photo" accept="image/*" required>
+                                        <button type="submit" class="btn btn-primary">Update Photo</button>
+                                    </div>
+                                    @error('photo')
+                                        <span class="text-danger small">{{ $message }}</span>
+                                    @enderror
+                                </form>
                                 <h4 class="card-title">{{ Auth::user()->name }}</h4>
                                 <p class="card-text text-muted">{{ Auth::user()->email }}</p>
                             </div>

@@ -11,6 +11,8 @@ class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
 
+    protected $appends = ['photo'];
+
     protected $fillable = [
         'name',
         'email',
@@ -35,6 +37,11 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'birth_date' => 'date'
     ];
+
+    public function getPhotoAttribute()
+    {
+        return $this->photo_path;
+    }
 
     public function attendances()
     {

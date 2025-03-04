@@ -15,6 +15,7 @@ class PasswordController extends Controller
             'new_password' => 'required|string|min:8|confirmed',
         ]);
 
+        /** @var \App\Models\User $user */
         $user = Auth::user();
 
         if ($request->current_password !== $user->password) {

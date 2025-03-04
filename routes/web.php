@@ -48,6 +48,7 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/work-progress/{id}', [App\Http\Controllers\WorkProgressController::class, 'update'])->name('work-progress.update');
     Route::delete('/work-progress/{id}', [App\Http\Controllers\WorkProgressController::class, 'destroy'])->name('work-progress.destroy');
     Route::get('/pro', function () { return view('pro'); })->name('pro');
+    Route::put('/profile/update-photo', [App\Http\Controllers\UserController::class, 'updatePhoto'])->name('profile.update-photo');
     // Route::get('/settings', function () { return view('set'); })->name('set');
     Route::get('/set', function () { return view('set', ['user' => auth()->user()]); })->name('set');
     Route::post('/update-email', [App\Http\Controllers\UserController::class, 'updateEmail'])->name('update.email');

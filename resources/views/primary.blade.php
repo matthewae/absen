@@ -238,7 +238,7 @@
                                 <i class="fas fa-plus"></i> Record Attendance
                             </button>
                         </form>
-                        <button class="btn btn-outline-primary">
+                        <button class="btn btn-outline-primary" onclick="window.location.href='{{ route('jdwl') }}'">
                             <i class="fas fa-calendar-plus"></i> View Schedule
                         </button>
                     </div>
