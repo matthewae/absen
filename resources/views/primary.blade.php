@@ -249,7 +249,22 @@
                     <div class="col-md-3">
                         <div class="stats-card">
                             <h5>Today's Attendance</h5>
-                            <p class="h3 mb-0">Not Checked In</p>
+                            <p class="h3 mb-0">
+                                @php
+                                    $todayAttendance = \App\Models\Attendance::where('user_id', auth()->id())
+                                        ->whereDate('date', \Carbon\Carbon::today())
+                                        ->first();
+                                @endphp
+                                @if($todayAttendance)
+                                    @if($todayAttendance->time_out)
+                                        Checked Out
+                                    @else
+                                        Checked In
+                                    @endif
+                                @else
+                                    Not Checked In
+                                @endif
+                            </p>
                         </div>
                     </div>
                     <div class="col-md-3">

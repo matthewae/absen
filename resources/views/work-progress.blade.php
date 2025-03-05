@@ -190,6 +190,10 @@
                 </div>
                 @endif
 
+                <div id="uploadSuccess" class="alert alert-success d-none" role="alert">
+                    <i class="fas fa-check-circle me-2"></i>File uploaded successfully!
+                </div>
+
                 <form action="{{ route('work-progress.store') }}" method="POST" enctype="multipart/form-data" id="progressForm">
                     @csrf
                     <div class="mb-3">
@@ -230,6 +234,7 @@
                             <img src="" alt="Preview" class="img-thumbnail" style="max-height: 200px">
                             <p class="file-name mt-2"></p>
                         </div>
+                        <small class="text-muted">Please select a file to enable submission</small>
                     </div>
 
                     <button type="submit" class="btn btn-primary" id="submitBtn" disabled>Submit Progress</button>
@@ -239,16 +244,15 @@
                 document.addEventListener('DOMContentLoaded', function() {
                     const attachmentInput = document.getElementById('attachment');
                     const submitBtn = document.getElementById('submitBtn');
-                    const imagePreview = document.getElementById('imagePreview');
-                    const previewImg = imagePreview.querySelector('img');
+                    const filePreview = document.getElementById('filePreview');
+                    const previewImg = filePreview.querySelector('img');
+                    const fileName = filePreview.querySelector('.file-name');
+                    const form = document.getElementById('progressForm');
+                    const requiredInputs = form.querySelectorAll('[required]');
 
                     attachmentInput.addEventListener('change', function() {
                         if (this.files && this.files[0]) {
                             const file = this.files[0];
-                            const filePreview = document.getElementById('filePreview');
-                            const previewImg = filePreview.querySelector('img');
-                            const fileName = filePreview.querySelector('.file-name');
-                            
                             if (file.type.startsWith('image/')) {
                                 const reader = new FileReader();
                                 reader.onload = function(e) {
@@ -256,38 +260,35 @@
                                     previewImg.style.display = 'block';
                                     fileName.textContent = file.name;
                                     filePreview.classList.remove('d-none');
-                                    submitBtn.disabled = false;
+                                    document.getElementById('uploadSuccess').classList.remove('d-none');
                                 }
                                 reader.readAsDataURL(file);
                             } else {
                                 previewImg.style.display = 'none';
                                 fileName.textContent = file.name;
                                 filePreview.classList.remove('d-none');
-                                submitBtn.disabled = false;
+                                document.getElementById('uploadSuccess').classList.remove('d-none');
                             }
+                            checkFormValidity();
                         } else {
                             filePreview.classList.add('d-none');
                             previewImg.src = '';
                             fileName.textContent = '';
-                            submitBtn.disabled = true;
+                            document.getElementById('uploadSuccess').classList.add('d-none');
+                            checkFormValidity();
                         }
                     });
 
-                    document.getElementById('progressForm').addEventListener('reset', function() {
-                        imagePreview.classList.add('d-none');
-                        previewImg.src = '';
-                        submitBtn.disabled = true;
-                    });
-
-                    // Enable form submission when all required fields are filled
-                    const form = document.getElementById('progressForm');
-                    const requiredInputs = form.querySelectorAll('[required]');
-                    
                     function checkFormValidity() {
                         let isValid = true;
                         requiredInputs.forEach(input => {
-                            if (!input.value) isValid = false;
+                            if (!input.value.trim()) {
+                                isValid = false;
+                            }
                         });
+                        if (!attachmentInput.files || !attachmentInput.files[0]) {
+                            isValid = false;
+                        }
                         submitBtn.disabled = !isValid;
                     }
 
@@ -296,7 +297,6 @@
                         input.addEventListener('change', checkFormValidity);
                     });
 
-                    // Initial check
                     checkFormValidity();
                 });
                 </script>

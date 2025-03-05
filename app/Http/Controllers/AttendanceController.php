@@ -29,7 +29,7 @@ class AttendanceController extends Controller
 
         if ($existingAttendance) {
             if ($existingAttendance->time_out) {
-                return redirect()->back()->with('error', 'You have already completed your attendance for today.');
+                return redirect()->back()->with('error', 'You have already completed your attendance for today. You cannot record attendance twice.');
             }
 
             $existingAttendance->update([
@@ -37,7 +37,7 @@ class AttendanceController extends Controller
                 'notes' => $request->notes
             ]);
 
-            return redirect()->back()->with('status', 'Check-out recorded successfully.');
+            return redirect()->back()->with('status', 'Check-out recorded successfully. Have a great day!');
         }
 
         Attendance::create([
@@ -48,7 +48,7 @@ class AttendanceController extends Controller
             'status' => 'present'
         ]);
 
-        return redirect()->back()->with('status', 'Check-in recorded successfully.');
+        return redirect()->back()->with('status', 'Check-in recorded successfully. Welcome to work!');
     }
 
     public function leave(Request $request)
