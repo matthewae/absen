@@ -11,7 +11,6 @@ class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
 
-    protected $appends = ['photo'];
 
     protected $fillable = [
         'name',
@@ -40,7 +39,7 @@ class User extends Authenticatable
 
     public function getPhotoAttribute()
     {
-        return $this->attributes['photo'];
+        return isset($this->attributes['photo']) ? $this->attributes['photo'] : null;
     }
 
     public function attendances()
