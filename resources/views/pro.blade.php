@@ -15,12 +15,16 @@
             --text-color: #2c3e50;
             --bg-light: #f8f9fa;
             --transition: all 0.3s ease;
+            --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --hover-transform: translateY(-5px);
         }
 
         body {
             font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
             background-color: var(--bg-light);
             color: var(--text-color);
+            letter-spacing: 0.025em;
+            line-height: 1.6;
         }
 
         .sidebar {
@@ -61,44 +65,57 @@
 
         .card {
             border: none;
-            box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
-            border-radius: 1rem;
+            box-shadow: var(--card-shadow);
+            border-radius: 1.5rem;
             transition: var(--transition);
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
         }
 
         .card:hover {
-            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
-            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            transform: var(--hover-transform);
         }
 
         .profile-photo {
             width: 300px;
             height: 400px;
             object-fit: cover;
-            border: none;
-            border-radius: 0;
-            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+            border: 4px solid white;
+            border-radius: 1.5rem;
+            box-shadow: var(--card-shadow);
             transition: var(--transition);
+            filter: brightness(1.02);
         }
 
         .profile-photo:hover {
-            transform: scale(1.02);
+            transform: var(--hover-transform);
+            filter: brightness(1.05);
         }
 
         .personal-info h6 {
             color: var(--primary-color);
             font-weight: 600;
             margin-bottom: 0.5rem;
+            font-size: 0.95rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
         }
 
         .text-secondary {
             color: #6c757d !important;
+            font-size: 1.1rem;
+            font-weight: 500;
         }
 
         .btn-primary {
             background-color: var(--primary-color);
             border-color: var(--primary-color);
             transition: var(--transition);
+            padding: 0.75rem 1.5rem;
+            font-weight: 600;
+            letter-spacing: 0.025em;
+            border-radius: 0.75rem;
         }
 
         .btn-primary:hover {
@@ -151,32 +168,32 @@
 
                 <div class="row g-4">
                     <div class="col-md-4">
-                        <div class="card text-center p-4">
+                        <div class="card text-center p-5 mb-4">
                             <div class="card-body">
-                                <form action="{{ route('profile.update-photo') }}" method="POST" enctype="multipart/form-data" class="mb-4">
-                                    @csrf
-                                    @method('PUT')
-                                    <div class="position-relative mb-4">
-                                        <img src="{{ Auth::user()->photo ? 'data:image/jpeg;base64,'.Auth::user()->photo : 'https://via.placeholder.com/200x200' }}"
-                                            alt="Profile Photo"
-                                            class="profile-photo mb-3">
-                                        <label for="photo" class="btn btn-primary btn-sm position-absolute bottom-0 start-50 translate-middle-x">
-                                            <i class="fas fa-camera"></i> Change Photo
-                                        </label>
-                                        <input type="file" id="photo" name="photo" class="d-none" accept="image/*" onchange="this.form.submit()">
-                                    </div>
-                                </form>
+                                <div class="position-relative mb-4">
+                                    <img src="{{ Auth::user()->photo ? 'data:image/jpeg;base64,'.Auth::user()->photo : 'https://via.placeholder.com/200x200' }}"
+                                        alt="Profile Photo"
+                                        class="profile-photo mb-3">
+                                </div>
                                 <h4 class="card-title mb-2">{{ Auth::user()->name }}</h4>
                                 <p class="card-text text-secondary mb-0">{{ Auth::user()->position ?? 'Position Not Set' }}</p>
-                                <p class="card-text text-secondary">{{ Auth::user()->department ?? 'Department Not Set' }}</p>
+                                <p class="card-text text-secondary mb-3">{{ Auth::user()->department ?? 'Department Not Set' }}</p>
+                                <form action="{{ route('profile.update-photo') }}" method="POST" enctype="multipart/form-data">
+                                    @csrf
+                                    @method('PUT')
+                                    <label for="photo" class="btn btn-primary btn-sm w-auto px-3">
+                                        <i class="fas fa-camera"></i> Change Photo
+                                    </label>
+                                    <input type="file" id="photo" name="photo" class="d-none" accept="image/*" onchange="this.form.submit()">
+                                </form>
                             </div>
                         </div>
                     </div>
                     <div class="col-md-8">
-                        <div class="card">
-                            <div class="card-body p-4">
+                        <div class="card h-100">
+                            <div class="card-body p-5">
                                 <h5 class="card-title mb-4">Personal Information</h5>
-                                <div class="row g-4 personal-info">
+                                <div class="row g-4 personal-info animate__animated animate__fadeIn">
                                     <div class="col-sm-6">
                                         <h6>Full Name</h6>
                                         <p class="text-secondary">{{ Auth::user()->name }}</p>
