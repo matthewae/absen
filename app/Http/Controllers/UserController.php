@@ -52,7 +52,7 @@ class UserController extends Controller
         $photo = $request->file('photo');
         $photoContent = base64_encode(file_get_contents($photo->getRealPath()));
         
-        $user->photo_path = $photoContent;
+        $user->photo = $photoContent;
         $user->save();
 
         return redirect()

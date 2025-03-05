@@ -23,7 +23,7 @@ class User extends Authenticatable
         'address',
         'department',
         'position',
-        'photo_path',
+        'photo',
         'birth_date',
         'gender'
     ];
@@ -40,7 +40,7 @@ class User extends Authenticatable
 
     public function getPhotoAttribute()
     {
-        return $this->photo_path;
+        return $this->attributes['photo'];
     }
 
     public function attendances()
