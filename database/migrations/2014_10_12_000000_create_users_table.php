@@ -21,7 +21,7 @@ return new class extends Migration
             $table->string('address')->nullable();
             $table->string('department')->nullable();
             $table->string('position')->nullable();
-            $table->longblob('photo')->nullable();
+            $table->binary('photo')->nullable();
             $table->date('birth_date')->nullable();
             $table->enum('gender', ['male', 'female'])->nullable();
             $table->timestamp('email_verified_at')->nullable();

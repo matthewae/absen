@@ -9,7 +9,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('attendances', function (Blueprint $table) {
-            $table->longblob('leave_proof')->nullable()->after('leave_document');
+            $table->longText('leave_proof')->nullable()->after('leave_document');
         });
     }
 

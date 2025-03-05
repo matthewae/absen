@@ -269,14 +269,20 @@
                     </div>
                     <div class="col-md-3">
                         <div class="stats-card">
-                            <h5>Present Days</h5>
-                            <p class="h3 mb-0">0</p>
+                            <h5>Annual Leave Quota</h5>
+                            <p class="h3 mb-0">{{ Auth::user()->annual_leave_quota }} days</p>
                         </div>
                     </div>
                     <div class="col-md-3">
                         <div class="stats-card">
-                            <h5>Work Hours</h5>
-                            <p class="h3 mb-0">0h</p>
+                            <h5>Used Leave</h5>
+                            <p class="h3 mb-0">{{ Auth::user()->used_leave }} days</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="stats-card">
+                            <h5>Remaining Leave</h5>
+                            <p class="h3 mb-0">{{ Auth::user()->remaining_leave }} days</p>
                         </div>
                     </div>
                     <div class="col-md-3">

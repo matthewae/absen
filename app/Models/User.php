@@ -24,7 +24,9 @@ class User extends Authenticatable
         'position',
         'photo',
         'birth_date',
-        'gender'
+        'gender',
+        'annual_leave_quota',
+        'used_leave'
     ];
 
     protected $hidden = [
@@ -45,5 +47,22 @@ class User extends Authenticatable
     public function attendances()
     {
         return $this->hasMany(Attendance::class);
+    }
+
+    public function getRemainingLeaveAttribute()
+    {
+        return $this->annual_leave_quota - $this->used_leave;
+    }
+
+    public function incrementUsedLeave()
+    {
+        $this->increment('used_leave');
+    }
+
+    public function decrementUsedLeave()
+    {
+        if ($this->used_leave > 0) {
+            $this->decrement('used_leave');
+        }
     }
 }
