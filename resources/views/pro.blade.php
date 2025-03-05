@@ -197,6 +197,18 @@
                                         <h6>Birth Date</h6>
                                         <p class="text-secondary">{{ Auth::user()->birth_date ? date('d F Y', strtotime(Auth::user()->birth_date)) : 'Not set' }}</p>
                                     </div>
+                                    <div class="col-sm-6">
+                                        <h6>Annual Leave Quota</h6>
+                                        <p class="text-secondary">{{ Auth::user()->annual_leave_quota }} days</p>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <h6>Remaining Leave</h6>
+                                        <p class="text-secondary">{{ Auth::user()->remaining_leave }} days</p>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <h6>Used Leave</h6>
+                                        <p class="text-secondary">{{ Auth::user()->used_leave }} days</p>
+                                    </div>
                                 </div>
                             </div>
                         </div>
