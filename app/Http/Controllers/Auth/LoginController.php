@@ -98,4 +98,12 @@ class LoginController extends Controller
         }
         return redirect('/primary');
     }
+
+    public function showLoginForm(Request $request)
+    {
+        if ($request->is('supervisor/login')) {
+            return view('auth.LGSuper');
+        }
+        return view('auth.login');
+    }
 }

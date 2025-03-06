@@ -19,7 +19,8 @@ Route::get('/', function () {
     return redirect()->route('login');
 });
 
-Route::get('/supervisor/login', [App\Http\Controllers\SupervisorController::class, 'showLoginForm'])->name('supervisor.login');
+Route::get('/supervisor/login', [App\Http\Controllers\Auth\LoginController::class, 'showLoginForm'])->name('supervisor.login');
+Route::post('/supervisor/login', [App\Http\Controllers\Auth\LoginController::class, 'login'])->name('supervisor.login.submit');
 Route::get('/supervisor/dashboard', [App\Http\Controllers\SupervisorController::class, 'index'])->name('supervisor.dashboard');
 
 Auth::routes(['verify' => true]);

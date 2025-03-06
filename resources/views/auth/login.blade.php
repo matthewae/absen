@@ -254,43 +254,20 @@ pera    <script src="https://cdnjs.cloudflare.com/ajax/libs/particles.js/2.0.0/p
             <div class="login-slide">
                 <div class="card" style="width: 100%; max-width: 420px;">
                     <h4 class="text-center">Welcome Back</h4>
-                    <form method="POST" action="{{ route('login') }}">
-                        @csrf
-                        <div class="mb-4">
-                            <label for="staff_id" class="form-label">Staff ID</label>
-                            <input id="staff_id" type="text" class="form-control @error('staff_id') is-invalid @enderror" name="staff_id" value="{{ old('staff_id') }}" required autofocus placeholder="Enter your Staff ID" pattern="[0-9]{3,6}" title="Please enter a valid Staff ID (3-6 digits)">
-                            @error('staff_id')
-                            <span class="invalid-feedback">{{ $message }}</span>
-                            @enderror
-                        </div>
-                        <div class="mb-4">
-                            <label for="password" class="form-label">Password</label>
-                            <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required placeholder="Enter your password">
-                            @error('password')
-                            <span class="invalid-feedback">{{ $message }}</span>
-                            @enderror
-                        </div>
-                        <div class="mb-4 form-check">
-                            <input type="checkbox" class="form-check-input" name="remember" id="remember">
-                            <label class="form-check-label" for="remember">Remember Me</label>
-                        </div>
-                        <div class="d-grid gap-2">
-                            <button type="submit" class="btn btn-primary">
-                                Login
-                            </button>
-                        </div>
-
-                        <div class="mt-3 text-center d-flex justify-content-between align-items-center">
-                            @if (Route::has('password.request'))
-                                <!-- <a class="text-white text-decoration-none" href="{{ route('password.request') }}">
-                                    Forgot Your Password?
-                                </a> -->
-                            @endif
-                            <a href="{{ route('supervisor.login') }}" class="text-black text-decoration-none" style="color: #000000 !important;">
-                                Supervisor <i class="fas fa-arrow-right"></i>
-                            </a>
-                        </div>
-                    </form>
+                    <div class="login-form">
+                        <h2 class="text-white mb-4">Staff Login</h2>
+                        <form method="POST" action="{{ route('login') }}">
+                            @csrf
+                            <div class="mb-3">
+                                <input type="text" class="form-control" name="staff_id" placeholder="Staff ID" required>
+                            </div>
+                            <div class="mb-3">
+                                <input type="password" class="form-control" name="password" placeholder="Password" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary w-100 mb-3">Login</button>
+                            <a href="{{ route('supervisor.login') }}" class="btn btn-outline-light w-100">Supervisor Login</a>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
