@@ -11,6 +11,7 @@ return new class extends Migration
         Schema::create('work_progress', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->enum('status', ['pending', 'revision', 'approved'])->default('pending');
             $table->string('title');
             $table->text('description');
             $table->string('attachment')->nullable();

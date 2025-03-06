@@ -21,13 +21,19 @@ class WorkProgressController extends Controller
     public function store(Request $request)
     {
         $request->validate([
+            'category' => 'required|string|in:' . implode(',', WorkProgress::categories()),
             'title' => 'required|string|max:255',
-            'description' => 'required|string',
+            'description' => ['required', 'string', function($attribute, $value, $fail) {
+                if (str_word_count($value) < 20) {
+                    $fail('The description must be at least 20 words.');
+                }
+            }],
             'attachment' => 'nullable|file|max:2048'
         ]);
 
         $workProgress = new WorkProgress();
         $workProgress->user_id = Auth::id();
+        $workProgress->category = $request->category;
         $workProgress->title = $request->title;
         $workProgress->description = $request->description;
 
@@ -47,8 +53,13 @@ class WorkProgressController extends Controller
         $workProgress = WorkProgress::where('user_id', Auth::id())->findOrFail($id);
 
         $request->validate([
+            'category' => 'required|string|in:' . implode(',', WorkProgress::categories()),
             'title' => 'required|string|max:255',
-            'description' => 'required|string',
+            'description' => ['required', 'string', function($attribute, $value, $fail) {
+                if (str_word_count($value) < 20) {
+                    $fail('The description must be at least 20 words.');
+                }
+            }],
             'attachment' => 'nullable|file|max:2048'
         ]);
 

@@ -11,10 +11,26 @@ class WorkProgress extends Model
 
     protected $fillable = [
         'user_id',
+        'category',
         'title',
         'description',
-        'attachment'
+        'attachment',
+        'status'
     ];
+
+    protected $attributes = [
+        'status' => 'pending'
+    ];
+
+    public static function categories()
+    {
+        return ['Perencanaan', 'Pengawasan', 'Kajian'];
+    }
+
+    public static function statuses()
+    {
+        return ['pending', 'revision', 'approved'];
+    }
 
     public function user()
     {
