@@ -32,6 +32,15 @@ class AttendanceController extends Controller
                 return redirect()->back()->with('error', 'You have already completed your attendance for today. You cannot record attendance twice.');
             }
 
+            // Check if user has submitted work progress for today
+            $hasWorkProgress = \App\Models\WorkProgress::where('user_id', $user->id)
+                ->whereDate('created_at', $today)
+                ->exists();
+
+            if (!$hasWorkProgress) {
+                return redirect()->back()->with('error', 'Please submit your work progress before checking out.');
+            }
+
             $existingAttendance->update([
                 'time_out' => now(),
                 'notes' => $request->notes
@@ -82,8 +91,8 @@ class AttendanceController extends Controller
         Attendance::create([
             'user_id' => $user->id,
             'date' => $leaveDate,
-            'notes' => "Leave Request - Reason: {$request->leave_reason}\nNotes: {$request->leave_notes}" . 
-                      ($documentPath ? "\nDocument: {$documentPath}" : ""),
+            'notes' => "Leave Request - Reason: {$request->leave_reason}\nNotes: {$request->leave_notes}" .
+                ($documentPath ? "\nDocument: {$documentPath}" : ""),
             'is_leave' => true
         ]);
 
