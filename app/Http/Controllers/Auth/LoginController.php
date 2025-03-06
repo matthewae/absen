@@ -11,7 +11,13 @@ class LoginController extends Controller
 {
     use AuthenticatesUsers;
 
-    protected $redirectTo = '/primary';
+    protected function redirectTo()
+    {
+        if (auth()->user()->role === 'supervisor') {
+            return '/supervisor/dashboard';
+        }
+        return '/primary';
+    }
 
     public function __construct()
     {
@@ -88,7 +94,7 @@ class LoginController extends Controller
     protected function authenticated(Request $request, $user)
     {
         if ($request->input($this->username()) === $user->supervisor_id) {
-            return redirect('/dashboard/supervisor');
+            return redirect()->route('supervisor.dashboard');
         }
         return redirect('/primary');
     }

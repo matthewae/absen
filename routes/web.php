@@ -22,8 +22,14 @@ Route::get('/', function () {
 Auth::routes(['verify' => true]);
 
 Route::middleware(['auth'])->group(function () {
+    Route::get('/supervisor/dashboard', [SupervisorDashboardController::class, 'index'])->name('supervisor.dashboard');
+    Route::put('/supervisor/work-progress/{workProgress}/status', [SupervisorDashboardController::class, 'updateWorkProgressStatus'])
+        ->name('supervisor.work-progress.status');
+});
+
+Route::middleware(['auth'])->group(function () {
     Route::get('/primary', function () { return view('primary'); })->name('primary');
-    // Route::get('/home', function () { return view('pro'); })->name('home');
+    Route::get('/home', function () { return view('pro'); })->name('home');
     Route::get('/attend', function () {
     $attend = \App\Models\Attendance::where('user_id', auth()->id())
         ->orderBy('date', 'desc')
