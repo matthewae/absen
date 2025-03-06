@@ -19,6 +19,10 @@ Route::get('/', function () {
     return redirect()->route('login');
 });
 
+Route::get('/supervisor/login', function () {
+    return view('auth.LGSuper');
+})->name('supervisor.login');
+
 Auth::routes(['verify' => true]);
 
 Route::middleware(['auth'])->group(function () {

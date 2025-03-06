@@ -274,8 +274,21 @@ pera    <script src="https://cdnjs.cloudflare.com/ajax/libs/particles.js/2.0.0/p
                             <input type="checkbox" class="form-check-input" name="remember" id="remember">
                             <label class="form-check-label" for="remember">Remember Me</label>
                         </div>
-                        <div class="d-grid">
-                            <button type="submit" class="btn btn-primary">Sign In</button>
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary">
+                                Login
+                            </button>
+                        </div>
+
+                        <div class="mt-3 text-center d-flex justify-content-between align-items-center">
+                            @if (Route::has('password.request'))
+                                <!-- <a class="text-white text-decoration-none" href="{{ route('password.request') }}">
+                                    Forgot Your Password?
+                                </a> -->
+                            @endif
+                            <a href="{{ route('supervisor.login') }}" class="text-black text-decoration-none" style="color: #000000 !important;">
+                                Supervisor <i class="fas fa-arrow-right"></i>
+                            </a>
                         </div>
                     </form>
                 </div>
