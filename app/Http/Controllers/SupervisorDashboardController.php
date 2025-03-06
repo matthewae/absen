@@ -14,7 +14,7 @@ class SupervisorDashboardController extends Controller
         $user = auth()->user();
         
         if ($user->role !== 'supervisor') {
-            return redirect()->route('home')->with('error', 'Unauthorized access');
+            return redirect()->route('primary')->with('error', 'Unauthorized access');
         }
 
         $employeeIds = $user->employees->pluck('id');
@@ -29,7 +29,7 @@ class SupervisorDashboardController extends Controller
             ->latest()
             ->get();
 
-        return view('dashboard.supervisor', compact('workProgress', 'attendances'));
+        return view('super', compact('workProgress', 'attendances'));
     }
 
     public function updateWorkProgressStatus(Request $request, WorkProgress $workProgress)

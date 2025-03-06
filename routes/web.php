@@ -25,11 +25,12 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/supervisor/dashboard', [SupervisorDashboardController::class, 'index'])->name('supervisor.dashboard');
     Route::put('/supervisor/work-progress/{workProgress}/status', [SupervisorDashboardController::class, 'updateWorkProgressStatus'])
         ->name('supervisor.work-progress.status');
+    Route::get('/super', [SupervisorDashboardController::class, 'index'])->name('super');
 });
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/primary', function () { return view('primary'); })->name('primary');
-    Route::get('/home', function () { return view('pro'); })->name('home');
+    Route::get('/home', [SupervisorDashboardController::class, 'index'])->name('home');
     Route::get('/attend', function () {
     $attend = \App\Models\Attendance::where('user_id', auth()->id())
         ->orderBy('date', 'desc')
@@ -56,12 +57,7 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/work-progress/{id}', [App\Http\Controllers\WorkProgressController::class, 'destroy'])->name('work-progress.destroy');
     Route::get('/pro', function () { return view('pro'); })->name('pro');
     Route::put('/profile/update-photo', [App\Http\Controllers\UserController::class, 'updatePhoto'])->name('profile.update-photo');
-    // Route::get('/settings', function () { return view('set'); })->name('set');
     Route::get('/set', function () { return view('set', ['user' => auth()->user()]); })->name('set');
     Route::post('/update-email', [App\Http\Controllers\UserController::class, 'updateEmail'])->name('update.email');
     Route::post('/update-password', [App\Http\Controllers\PasswordController::class, 'update'])->name('password.update');
-
-    // Supervisor routes
-    Route::get('/supervisor/dashboard', [SupervisorDashboardController::class, 'index'])->name('supervisor.dashboard');
-    Route::patch('/supervisor/work-progress/{workProgress}/status', [SupervisorDashboardController::class, 'updateWorkProgressStatus'])->name('work-progress.update-status');
 });
