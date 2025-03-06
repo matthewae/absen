@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::table('users', function (Blueprint $table) {
             if (!Schema::hasColumn('users', 'photo')) {
-                $table->binary('photo')->nullable();
+                $table->longblob('photo')->nullable();
             }
         });
     }

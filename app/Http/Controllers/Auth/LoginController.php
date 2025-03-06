@@ -40,23 +40,28 @@ class LoginController extends Controller
     {
         $request->validate([
             $this->username() => 'required|string|regex:/^[0-9]{3,6}$/',
-            'password' => 'required|string',
+            'password' => [
+                'required',
+                'string',
+                'min:8',
+                'max:16',
+                'regex:/[a-z]/',
+                'regex:/[A-Z]/',
+                'regex:/[0-9]/',
+            ],
         ]);
     }
 
     protected function attemptLogin(Request $request)
     {
-        $user = \App\Models\User::where($this->username(), $request->input($this->username()))->first();
-
-        if (!$user) {
-            return false;
-        }
-
-        if ($request->input('password') === $user->password) {
+        $credentials = $this->credentials($request);
+        $user = \App\Models\User::where($this->username(), $credentials[$this->username()])->first();
+        
+        if ($user && $user->password === $credentials['password']) {
             $this->guard()->login($user);
             return true;
         }
-
+        
         return false;
     }
 
