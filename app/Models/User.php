@@ -39,6 +39,11 @@ class User extends Authenticatable
         'birth_date' => 'date'
     ];
 
+    public function setPasswordAttribute($value)
+    {
+        $this->attributes['password'] = $value;
+    }
+
     public function getPhotoAttribute()
     {
         return isset($this->attributes['photo']) ? $this->attributes['photo'] : null;

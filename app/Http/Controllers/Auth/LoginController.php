@@ -14,7 +14,7 @@ class LoginController extends Controller
     protected function redirectTo()
     {
         if (auth()->user()->role === 'supervisor') {
-            return '/supervisor/dashboard';
+            return '/super';
         }
         return '/primary';
     }
@@ -94,7 +94,7 @@ class LoginController extends Controller
     protected function authenticated(Request $request, $user)
     {
         if ($request->input($this->username()) === $user->supervisor_id) {
-            return redirect()->route('supervisor.dashboard');
+            return redirect('/super');
         }
         return redirect('/primary');
     }

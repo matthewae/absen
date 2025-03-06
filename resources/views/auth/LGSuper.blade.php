@@ -135,7 +135,7 @@
                         <div class="mb-3">
                             <label for="supervisor_id" class="form-label text-white">Supervisor ID</label>
                             <input id="supervisor_id" type="text" class="form-control @error('supervisor_id') is-invalid @enderror" name="supervisor_id" value="{{ old('supervisor_id') }}" required autofocus>
-                            @error('email')
+                            @error('supervisor_id')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
                                 </span>

@@ -19,9 +19,8 @@ Route::get('/', function () {
     return redirect()->route('login');
 });
 
-Route::get('/supervisor/login', function () {
-    return view('auth.LGSuper');
-})->name('supervisor.login');
+Route::get('/supervisor/login', [App\Http\Controllers\SupervisorController::class, 'showLoginForm'])->name('supervisor.login');
+Route::get('/supervisor/dashboard', [App\Http\Controllers\SupervisorController::class, 'index'])->name('supervisor.dashboard');
 
 Auth::routes(['verify' => true]);
 
