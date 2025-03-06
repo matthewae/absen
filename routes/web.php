@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\SupervisorDashboardController;
 
 /*
 |--------------------------------------------------------------------------
@@ -53,4 +54,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/set', function () { return view('set', ['user' => auth()->user()]); })->name('set');
     Route::post('/update-email', [App\Http\Controllers\UserController::class, 'updateEmail'])->name('update.email');
     Route::post('/update-password', [App\Http\Controllers\PasswordController::class, 'update'])->name('password.update');
+
+    // Supervisor routes
+    Route::get('/supervisor/dashboard', [SupervisorDashboardController::class, 'index'])->name('supervisor.dashboard');
+    Route::patch('/supervisor/work-progress/{workProgress}/status', [SupervisorDashboardController::class, 'updateWorkProgressStatus'])->name('work-progress.update-status');
 });

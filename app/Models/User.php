@@ -49,6 +49,21 @@ class User extends Authenticatable
         return $this->hasMany(Attendance::class);
     }
 
+    public function supervisor()
+    {
+        return $this->belongsTo(User::class, 'supervisor_id');
+    }
+
+    public function employees()
+    {
+        return $this->hasMany(User::class, 'supervisor_id');
+    }
+
+    public function workProgress()
+    {
+        return $this->hasMany(WorkProgress::class);
+    }
+
     public function getRemainingLeaveAttribute()
     {
         return $this->annual_leave_quota - $this->used_leave;

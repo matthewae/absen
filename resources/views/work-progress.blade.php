@@ -228,10 +228,9 @@
                     <div class="mb-3">
                         <label for="status" class="form-label">Status</label>
                         <select class="form-select @error('status') is-invalid @enderror" id="status" name="status" required>
-                            <option value="completed" {{ old('status') == 'completed' ? 'selected' : '' }}>Completed</option>
-                            <option value="in-progress" {{ old('status') == 'in-progress' ? 'selected' : '' }}>In Progress</option>
-                            <option value="revision" {{ old('status') == 'revision' ? 'selected' : '' }}>Revision</option>
                             <option value="pending" {{ old('status') == 'pending' ? 'selected' : '' }}>Pending</option>
+                            <option value="revision" {{ old('status') == 'revision' ? 'selected' : '' }}>Revision</option>
+                            <option value="approved" {{ old('status') == 'approved' ? 'selected' : '' }}>Approved</option>
                         </select>
                         @error('status')
                         <div class="invalid-feedback">{{ $message }}</div>

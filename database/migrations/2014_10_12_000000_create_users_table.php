@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('users', function (Blueprint $table) {
             $table->id();
             $table->string('staff_id')->require();
+            $table->string('supervisor_id')->nullable();
             $table->string('name')->require();
             $table->string('email')->unique();
             $table->string('role')->default('staff');
