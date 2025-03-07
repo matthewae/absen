@@ -154,7 +154,7 @@
             <a class="nav-link {{ request()->routeIs('jdwl') ? 'active' : '' }}" href="{{ route('jdwl') }}">
                 <i class="fas fa-calendar"></i> Schedule
             </a>
-            <a href="{{ route('work-progress') }}" class="nav-link {{ request()->routeIs('work-progress') ? 'active' : '' }}">
+            <a href="{{ route('work-progress.index') }}" class="nav-link {{ request()->routeIs('work-progress.index') ? 'active' : '' }}">
                 <i class="fas fa-tasks"></i> Work Progress
             </a>
             <a class="nav-link {{ request()->routeIs('pro') ? 'active' : '' }}" href="{{ route('pro') }}">
@@ -254,83 +254,83 @@
                 </form>
 
                 <script>
-                document.addEventListener('DOMContentLoaded', function() {
-                    const attachmentInput = document.getElementById('attachment');
-                    const submitBtn = document.getElementById('submitBtn');
-                    const filePreview = document.getElementById('filePreview');
-                    const selectedFiles = filePreview.querySelector('.selected-files');
-                    const form = document.getElementById('progressForm');
-                    const requiredInputs = form.querySelectorAll('[required]');
-                    const maxFileSize = 150 * 1024 * 1024; // 150MB in bytes
+                    document.addEventListener('DOMContentLoaded', function() {
+                        const attachmentInput = document.getElementById('attachment');
+                        const submitBtn = document.getElementById('submitBtn');
+                        const filePreview = document.getElementById('filePreview');
+                        const selectedFiles = filePreview.querySelector('.selected-files');
+                        const form = document.getElementById('progressForm');
+                        const requiredInputs = form.querySelectorAll('[required]');
+                        const maxFileSize = 150 * 1024 * 1024; // 150MB in bytes
 
-                    attachmentInput.addEventListener('change', function() {
-                        selectedFiles.innerHTML = '';
-                        let isValid = true;
+                        attachmentInput.addEventListener('change', function() {
+                            selectedFiles.innerHTML = '';
+                            let isValid = true;
 
-                        if (this.files.length > 0) {
-                            Array.from(this.files).forEach(file => {
-                                const fileDiv = document.createElement('div');
-                                fileDiv.className = 'mb-2';
-                                
-                                if (file.size > maxFileSize) {
-                                    isValid = false;
-                                    fileDiv.innerHTML = `
+                            if (this.files.length > 0) {
+                                Array.from(this.files).forEach(file => {
+                                    const fileDiv = document.createElement('div');
+                                    fileDiv.className = 'mb-2';
+
+                                    if (file.size > maxFileSize) {
+                                        isValid = false;
+                                        fileDiv.innerHTML = `
                                         <i class="fas fa-exclamation-triangle text-danger me-2"></i>
                                         <span class="text-danger">${file.name} (${(file.size / (1024 * 1024)).toFixed(2)}MB) - File too large</span>
                                     `;
-                                } else {
-                                    fileDiv.innerHTML = `
+                                    } else {
+                                        fileDiv.innerHTML = `
                                         <i class="fas fa-file me-2"></i>
                                         <span>${file.name} (${(file.size / (1024 * 1024)).toFixed(2)}MB)</span>
                                     `;
+                                    }
+                                    selectedFiles.appendChild(fileDiv);
+                                });
+                                filePreview.classList.remove('d-none');
+                                if (isValid) {
+                                    document.getElementById('uploadSuccess').classList.remove('d-none');
+                                } else {
+                                    document.getElementById('uploadSuccess').classList.add('d-none');
                                 }
-                                selectedFiles.appendChild(fileDiv);
-                            });
-                            filePreview.classList.remove('d-none');
-                            if (isValid) {
-                                document.getElementById('uploadSuccess').classList.remove('d-none');
                             } else {
+                                filePreview.classList.add('d-none');
                                 document.getElementById('uploadSuccess').classList.add('d-none');
                             }
-                        } else {
-                            filePreview.classList.add('d-none');
-                            document.getElementById('uploadSuccess').classList.add('d-none');
-                        }
-                        
-                        checkFormValidity();
-                    });
 
-                    function checkFormValidity() {
-                        let isValid = true;
-                        requiredInputs.forEach(input => {
-                            if (!input.value.trim()) {
-                                isValid = false;
-                            }
+                            checkFormValidity();
                         });
-                        
-                        if (!attachmentInput.files || !attachmentInput.files[0]) {
-                            isValid = false;
-                        }
-                        
-                        // Check file sizes
-                        if (attachmentInput.files) {
-                            Array.from(attachmentInput.files).forEach(file => {
-                                if (file.size > maxFileSize) {
+
+                        function checkFormValidity() {
+                            let isValid = true;
+                            requiredInputs.forEach(input => {
+                                if (!input.value.trim()) {
                                     isValid = false;
                                 }
                             });
+
+                            if (!attachmentInput.files || !attachmentInput.files[0]) {
+                                isValid = false;
+                            }
+
+                            // Check file sizes
+                            if (attachmentInput.files) {
+                                Array.from(attachmentInput.files).forEach(file => {
+                                    if (file.size > maxFileSize) {
+                                        isValid = false;
+                                    }
+                                });
+                            }
+
+                            submitBtn.disabled = !isValid;
                         }
-                        
-                        submitBtn.disabled = !isValid;
-                    }
 
-                    requiredInputs.forEach(input => {
-                        input.addEventListener('input', checkFormValidity);
-                        input.addEventListener('change', checkFormValidity);
+                        requiredInputs.forEach(input => {
+                            input.addEventListener('input', checkFormValidity);
+                            input.addEventListener('change', checkFormValidity);
+                        });
+
+                        checkFormValidity();
                     });
-
-                    checkFormValidity();
-                });
                 </script>
             </div>
         </div>

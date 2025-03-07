@@ -256,7 +256,7 @@
                                 <div class="card mt-4">
                                     <div class="card-body">
                                         <h6 class="card-title text-primary">Status Update</h6>
-                                        <form action="{{ route('work-progress.update-status', $progress->id) }}" method="POST" class="mt-3">
+                                        <form action="{{ route('supervisor.work-progress.status', $progress) }}" method="POST" class="mt-3">
                                             @csrf
                                             @method('PATCH')
                                             <div class="row align-items-end">

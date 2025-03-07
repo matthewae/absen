@@ -13,10 +13,6 @@ class SupervisorDashboardController extends Controller
     {
         $user = auth()->user();
         
-        if ($user->role !== 'supervisor') {
-            return redirect()->route('primary')->with('error', 'Unauthorized access');
-        }
-
         $employeeIds = $user->employees->pluck('id');
 
         $workProgress = WorkProgress::whereIn('user_id', $employeeIds)

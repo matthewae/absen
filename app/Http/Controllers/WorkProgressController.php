@@ -52,7 +52,7 @@ class WorkProgressController extends Controller
         }
 
 
-        return redirect()->route('work-progress')->with('success', 'Work progress added successfully');
+        return redirect()->route('work-progress.index')->with('success', 'Work progress added successfully');
     }
 
     public function update(Request $request, $id)
@@ -95,7 +95,7 @@ class WorkProgressController extends Controller
 
         $workProgress->save();
 
-        return redirect()->route('work-progress')->with('success', 'Work progress updated successfully');
+        return redirect()->route('work-progress.index')->with('success', 'Work progress updated successfully');
     }
 
     public function destroy($id)
@@ -109,6 +109,6 @@ class WorkProgressController extends Controller
 
         $workProgress->delete(); // This will also delete attachments due to cascade
 
-        return redirect()->route('work-progress')->with('success', 'Work progress deleted successfully');
+        return redirect()->route('work-progress.index')->with('success', 'Work progress deleted successfully');
     }
 }

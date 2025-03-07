@@ -227,11 +227,14 @@
                     <a class="nav-link {{ request()->routeIs('jdwl') ? 'active' : '' }}" href="{{ route('jdwl') }}">
                         <i class="fas fa-calendar"></i> Schedule
                     </a>
-                    <a href="{{ route('work-progress') }}" class="nav-link {{ request()->routeIs('work-progress') ? 'active' : '' }}">
+                    <a href="{{ route('work-progress.index') }}" class="nav-link {{ request()->routeIs('work-progress.index') ? 'active' : '' }}">
                         <i class="fas fa-tasks"></i> Work Progress
                     </a>
                     <a class="nav-link {{ request()->routeIs('pro') ? 'active' : '' }}" href="{{ route('pro') }}">
                         <i class="fas fa-user"></i> Profile
+                    </a>
+                    <a class="nav-link {{ request()->routeIs('super') ? 'active' : '' }}" href="{{ route('super') }}">
+                        <i class="fas fa-shield-alt"></i> Supervisor
                     </a>
                     <a class="nav-link {{ request()->routeIs('set') ? 'active' : '' }}" href="{{ route('set') }}">
                         <i class="fas fa-cog"></i> Settings
