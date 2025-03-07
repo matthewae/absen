@@ -100,6 +100,73 @@
 
         <!-- Main Content -->
         <div class="flex-grow-1 p-4">
+            <div class="calendar-container">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h2 class="mb-0">Staff Schedule Management</h2>
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#scheduleModal">
+                        <i class="fas fa-plus me-2"></i>Add Schedule
+                    </button>
+                </div>
+                <div id="calendar"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Schedule Modal -->
+    <div class="modal fade" id="scheduleModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Add Schedule</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="scheduleForm" class="schedule-form">
+                        <div class="mb-3">
+                            <label for="staff_id" class="form-label">Staff Member</label>
+                            <select class="form-select" id="staff_id" name="staff_id" required>
+                                <option value="">Select Staff Member</option>
+                                @foreach($staffMembers as $staff)
+                                    <option value="{{ $staff->id }}">{{ $staff->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="title" class="form-label">Title</label>
+                            <input type="text" class="form-control" id="title" name="title" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="type" class="form-label">Type</label>
+                            <select class="form-select" id="type" name="type" required>
+                                <option value="work">Work</option>
+                                <option value="meeting">Meeting</option>
+                                <option value="training">Training</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="start_time" class="form-label">Start Time</label>
+                            <input type="datetime-local" class="form-control" id="start_time" name="start_time" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="end_time" class="form-label">End Time</label>
+                            <input type="datetime-local" class="form-control" id="end_time" name="end_time" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="description" class="form-label">Description</label>
+                            <textarea class="form-control" id="description" name="description" rows="3"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" id="saveSchedule">Save Schedule</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+        <!-- Main Content -->
+        <div class="flex-grow-1 p-4">
             <div class="container-fluid">
                 <div class="row mb-4">
                     <div class="col-12">
@@ -191,39 +258,52 @@
                     center: 'title',
                     right: 'dayGridMonth,timeGridWeek,timeGridDay'
                 },
-                events: '/supervisor/schedules',
+                events: '/schedules',
                 editable: true,
                 selectable: true,
                 selectMirror: true,
                 dayMaxEvents: true,
                 select: function(info) {
-                    document.querySelector('[name="start_time"]').value = info.startStr;
-                    document.querySelector('[name="end_time"]').value = info.endStr;
-                    var modal = new bootstrap.Modal(document.getElementById('addScheduleModal'));
+                    document.querySelector('#start_time').value = info.startStr;
+                    document.querySelector('#end_time').value = info.endStr;
+                    var modal = new bootstrap.Modal(document.getElementById('scheduleModal'));
                     modal.show();
+                },
+                eventClick: function(info) {
+                    // Show event details when clicked
+                    alert('Event: ' + info.event.title + '\n' +
+                          'Staff: ' + info.event.extendedProps.staff + '\n' +
+                          'Type: ' + info.event.extendedProps.type + '\n' +
+                          'Description: ' + info.event.extendedProps.description);
                 }
             });
             calendar.render();
 
             // Handle form submission
-            document.getElementById('scheduleForm').addEventListener('submit', function(e) {
-                e.preventDefault();
-                var formData = new FormData(this);
+            document.getElementById('saveSchedule').addEventListener('click', function() {
+                var form = document.getElementById('scheduleForm');
+                var formData = new FormData(form);
                 
-                fetch('/supervisor/schedules', {
+                fetch('/schedules', {
                     method: 'POST',
-                    body: formData,
                     headers: {
-                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
-                    }
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify(Object.fromEntries(formData))
                 })
                 .then(response => response.json())
                 .then(data => {
                     if (data.success) {
                         calendar.refetchEvents();
-                        bootstrap.Modal.getInstance(document.getElementById('addScheduleModal')).hide();
-                        this.reset();
+                        bootstrap.Modal.getInstance(document.getElementById('scheduleModal')).hide();
+                        form.reset();
                     }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Failed to save schedule. Please try again.');
                 });
             });
         });

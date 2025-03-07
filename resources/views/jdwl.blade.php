@@ -98,6 +98,53 @@
                     <a class="nav-link {{ request()->routeIs('primary') ? 'active' : '' }}" href="{{ route('primary') }}">
                         <i class="fas fa-home"></i> Dashboard
                     </a>
+                    <a class="nav-link {{ request()->routeIs('schedule') ? 'active' : '' }}" href="{{ route('schedule') }}">
+                        <i class="fas fa-calendar"></i> Schedule
+                    </a>
+                    <a class="nav-link" href="{{ route('settings') }}">
+                        <i class="fas fa-cog"></i> Settings
+                    </a>
+                    <form action="{{ route('logout') }}" method="POST" class="mt-auto">
+                        @csrf
+                        <button type="submit" class="btn btn-outline-light w-100">
+                            <i class="fas fa-sign-out-alt"></i> Logout
+                        </button>
+                    </form>
+                </nav>
+            </div>
+
+            <!-- Main Content -->
+            <div class="col-md-10 main-content">
+                <div class="schedule-container">
+                    <h2 class="mb-4">My Schedule</h2>
+                    <div id="calendar"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js'></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var calendarEl = document.getElementById('calendar');
+            var calendar = new FullCalendar.Calendar(calendarEl, {
+                initialView: 'dayGridMonth',
+                headerToolbar: {
+                    left: 'prev,next today',
+                    center: 'title',
+                    right: 'dayGridMonth,timeGridWeek,timeGridDay'
+                },
+                events: '/schedules',
+                eventClick: function(info) {
+                    alert('Event: ' + info.event.title + '\n' +
+                          'Type: ' + info.event.extendedProps.type + '\n' +
+                          'Description: ' + info.event.extendedProps.description);
+                }
+            });
+            calendar.render();
+        });
+    </script>
                     <a class="nav-link {{ request()->routeIs('attend') ? 'active' : '' }}" href="{{ route('attend') }}">
                         <i class="fas fa-clock"></i> Attendance
                     </a>

@@ -7,6 +7,7 @@ use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\WorkProgressController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\PasswordController;
+use App\Http\Controllers\ScheduleController;
 
 /*
 |--------------------------------------------------------------------------
@@ -31,6 +32,8 @@ Auth::routes(['verify' => true]);
 Route::prefix('supervisor')->name('supervisor.')->group(function () {
     Route::get('/login', [App\Http\Controllers\Auth\LoginController::class, 'showLoginForm'])->name('login');
     Route::post('/login', [App\Http\Controllers\Auth\LoginController::class, 'login'])->name('login.submit');
+    Route::get('/schedules', [ScheduleController::class, 'getSchedules']);
+    Route::post('/schedules', [ScheduleController::class, 'store']);
 });
 
 // Supervisor Routes (No Auth Required)
@@ -45,11 +48,11 @@ Route::get('/super', [SupervisorDashboardController::class, 'index'])->name('sup
 Route::middleware(['auth'])->group(function () {
 
     // Dashboard Routes
-    Route::get('/primary', function () { return view('primary'); })->name('primary');
-    Route::get('/spvschedule', function () {
-        $staffMembers = \App\Models\User::where('role', 'staff')->get();
-        return view('SPVSchedule', compact('staffMembers'));
-    })->name('spvschedule');
+    Route::get('/primary', function () { 
+        $staffSchedules = \App\Models\Schedule::where('staff_id', auth()->id())->get();
+        return view('primary', compact('staffSchedules')); 
+    })->name('primary');
+    Route::get('/spvschedule', [ScheduleController::class, 'index'])->name('spvschedule');
     Route::get('/home', [SupervisorDashboardController::class, 'index'])->name('home');
 
     // Attendance Routes

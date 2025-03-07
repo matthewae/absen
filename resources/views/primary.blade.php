@@ -7,6 +7,8 @@
     <title>{{ config('app.name', 'Laravel') }}</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+    <link href='https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.css' rel='stylesheet' />
+    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.js'></script>
     <style>
         :root {
             --primary-color: #2c3e50;
@@ -376,6 +378,19 @@
             const today = new Date();
             let currentMonth = today.getMonth();
             let currentYear = today.getFullYear();
+            
+            // Get staff schedules from PHP
+            const staffSchedules = @json($staffSchedules);
+
+            // Function to check if a date has any events
+            function getEventsForDate(date) {
+                return staffSchedules.filter(schedule => {
+                    const scheduleDate = new Date(schedule.start);
+                    return scheduleDate.getDate() === date.getDate() &&
+                           scheduleDate.getMonth() === date.getMonth() &&
+                           scheduleDate.getFullYear() === date.getFullYear();
+                });
+            }
 
             // Add event listeners for month navigation
             document.getElementById('prevMonth').addEventListener('click', function() {
@@ -434,9 +449,13 @@
                                                     <span class="date-number ${dateColor}">${date}</span>
                                                     <div class="small text-muted ${dateColor}">${dayName}</div>
                                                 </div>
-                                                <span class="badge bg-primary d-none">2</span>
+                                                <span class="badge bg-primary ${getEventsForDate(currentDate).length > 0 ? '' : 'd-none'}">${getEventsForDate(currentDate).length}</span>
                                             </div>
-                                            <div class="event-dots"></div>`;
+                                            <div class="event-dots">
+                                                ${getEventsForDate(currentDate).map(event => `
+                                                    <div class="small text-truncate text-primary">${event.title}</div>
+                                                `).join('')}
+                                            </div>`;
 
                             // Highlight today's date
                             if (date === today.getDate() && month === today.getMonth() && year === today.getFullYear()) {
@@ -567,6 +586,35 @@
             });
         });
     </script>
+</body>
+
+<div class="calendar mb-4">
+    <h4 class="mb-3">My Schedule</h4>
+    <div id="calendar"></div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var calendarEl = document.getElementById('calendar');
+        var calendar = new FullCalendar.Calendar(calendarEl, {
+            initialView: 'dayGridMonth',
+            headerToolbar: {
+                left: 'prev,next today',
+                center: 'title',
+                right: 'dayGridMonth,timeGridWeek,timeGridDay'
+            },
+            events: '/supervisor/schedules',
+            editable: false,
+            selectable: false,
+            selectMirror: true,
+            dayMaxEvents: true,
+            eventClick: function(info) {
+                alert('Event: ' + info.event.title + '\nType: ' + info.event.extendedProps.type);
+            }
+        });
+        calendar.render();
+    });
+</script>
 </body>
 
 </html>

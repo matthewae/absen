@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Attendance;
 use App\Models\User;
+use App\Models\Schedule;
 use Carbon\Carbon;
 
 class HomeController extends Controller
@@ -37,12 +38,29 @@ class HomeController extends Controller
             ->take(10)
             ->get();
 
+        // Get staff schedules for the current user
+        $staffSchedules = [];
+        if (auth()->check()) {
+            $staffSchedules = Schedule::where('staff_id', auth()->id())
+                ->orderBy('start_time')
+                ->get()
+                ->map(function ($schedule) {
+                    return [
+                        'title' => $schedule->title,
+                        'start' => $schedule->start_time->format('Y-m-d\\TH:i:s'),
+                        'end' => $schedule->end_time->format('Y-m-d\\TH:i:s'),
+                        'type' => $schedule->type
+                    ];
+                });
+        }
+
         return view('primary', compact(
             'totalEmployees',
             'presentToday',
             'lateToday',
             'leaveToday',
-            'recentAttendance'
+            'recentAttendance',
+            'staffSchedules'
         ));
     }
 }
