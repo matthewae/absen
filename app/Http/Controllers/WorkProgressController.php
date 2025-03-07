@@ -28,7 +28,7 @@ class WorkProgressController extends Controller
                     $fail('The description must be at least 20 words.');
                 }
             }],
-            'attachment' => 'nullable|file|max:2048'
+            'attachment.*' => 'required|file|max:153600' // 150MB limit
         ]);
 
         $workProgress = new WorkProgress();
@@ -36,14 +36,21 @@ class WorkProgressController extends Controller
         $workProgress->category = $request->category;
         $workProgress->title = $request->title;
         $workProgress->description = $request->description;
+        $workProgress->save();
 
         if ($request->hasFile('attachment')) {
-            $file = $request->file('attachment');
-            $path = $file->store('attachments', 'public');
-            $workProgress->attachment = $path;
+            foreach($request->file('attachment') as $file) {
+                $path = $file->store('attachments', 'public');
+                
+                $workProgress->attachments()->create([
+                    'file_name' => $file->getClientOriginalName(),
+                    'file_path' => $path,
+                    'mime_type' => $file->getMimeType(),
+                    'file_size' => $file->getSize()
+                ]);
+            }
         }
 
-        $workProgress->save();
 
         return redirect()->route('work-progress')->with('success', 'Work progress added successfully');
     }
@@ -60,21 +67,30 @@ class WorkProgressController extends Controller
                     $fail('The description must be at least 20 words.');
                 }
             }],
-            'attachment' => 'nullable|file|max:2048'
+            'attachment.*' => 'nullable|file|max:153600' // 150MB limit
         ]);
 
         $workProgress->title = $request->title;
         $workProgress->description = $request->description;
 
         if ($request->hasFile('attachment')) {
-            // Delete old attachment if exists
-            if ($workProgress->attachment) {
-                Storage::disk('public')->delete($workProgress->attachment);
+            // Delete old attachments
+            foreach ($workProgress->attachments as $attachment) {
+                Storage::disk('public')->delete($attachment->file_path);
             }
+            $workProgress->attachments()->delete();
 
-            $file = $request->file('attachment');
-            $path = $file->store('attachments', 'public');
-            $workProgress->attachment = $path;
+            // Store new attachments
+            foreach ($request->file('attachment') as $file) {
+                $path = $file->store('attachments', 'public');
+                
+                $workProgress->attachments()->create([
+                    'file_name' => $file->getClientOriginalName(),
+                    'file_path' => $path,
+                    'mime_type' => $file->getMimeType(),
+                    'file_size' => $file->getSize()
+                ]);
+            }
         }
 
         $workProgress->save();
@@ -86,11 +102,12 @@ class WorkProgressController extends Controller
     {
         $workProgress = WorkProgress::where('user_id', Auth::id())->findOrFail($id);
 
-        if ($workProgress->attachment) {
-            Storage::disk('public')->delete($workProgress->attachment);
+        // Delete all attachments
+        foreach ($workProgress->attachments as $attachment) {
+            Storage::disk('public')->delete($attachment->file_path);
         }
 
-        $workProgress->delete();
+        $workProgress->delete(); // This will also delete attachments due to cascade
 
         return redirect()->route('work-progress')->with('success', 'Work progress deleted successfully');
     }

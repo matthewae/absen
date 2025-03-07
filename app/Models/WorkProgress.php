@@ -14,9 +14,13 @@ class WorkProgress extends Model
         'category',
         'title',
         'description',
-        'attachment',
         'status'
     ];
+
+    public function attachments()
+    {
+        return $this->hasMany(WorkProgressAttachment::class);
+    }
 
     protected $attributes = [
         'status' => 'pending'

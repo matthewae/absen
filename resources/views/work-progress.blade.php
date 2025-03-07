@@ -231,6 +231,7 @@
                             <option value="pending" {{ old('status') == 'pending' ? 'selected' : '' }}>Pending</option>
                             <option value="revision" {{ old('status') == 'revision' ? 'selected' : '' }}>Revision</option>
                             <option value="approved" {{ old('status') == 'approved' ? 'selected' : '' }}>Approved</option>
+                            <option value="completed" {{ old('status') == 'completed' ? 'selected' : '' }}>Completed</option>
                         </select>
                         @error('status')
                         <div class="invalid-feedback">{{ $message }}</div>
@@ -238,16 +239,15 @@
                     </div>
 
                     <div class="mb-3">
-                        <label for="attachment" class="form-label">Progress Document</label>
-                        <input type="file" class="form-control @error('attachment') is-invalid @enderror" id="attachment" name="attachment" accept=".pdf,.doc,.docx,.xls,.xlsx,.png,.jpg,.jpeg" required>
-                        @error('attachment')
+                        <label for="attachment" class="form-label">Progress Documents (Max 150MB per file)</label>
+                        <input type="file" class="form-control @error('attachment.*') is-invalid @enderror" id="attachment" name="attachment[]" multiple accept=".pdf,.doc,.docx,.xls,.xlsx,.jpg,.jpeg,.png" required>
+                        @error('attachment.*')
                         <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                         <div id="filePreview" class="mt-2 d-none">
-                            <img src="" alt="Preview" class="img-thumbnail" style="max-height: 200px">
-                            <p class="file-name mt-2"></p>
+                            <div class="selected-files"></div>
                         </div>
-                        <small class="text-muted">Please select a file to enable submission</small>
+                        <small class="text-muted">You can select multiple files. Maximum file size: 150MB per file.</small>
                     </div>
 
                     <button type="submit" class="btn btn-primary" id="submitBtn" disabled>Submit Progress</button>
@@ -258,38 +258,46 @@
                     const attachmentInput = document.getElementById('attachment');
                     const submitBtn = document.getElementById('submitBtn');
                     const filePreview = document.getElementById('filePreview');
-                    const previewImg = filePreview.querySelector('img');
-                    const fileName = filePreview.querySelector('.file-name');
+                    const selectedFiles = filePreview.querySelector('.selected-files');
                     const form = document.getElementById('progressForm');
                     const requiredInputs = form.querySelectorAll('[required]');
+                    const maxFileSize = 150 * 1024 * 1024; // 150MB in bytes
 
                     attachmentInput.addEventListener('change', function() {
-                        if (this.files && this.files[0]) {
-                            const file = this.files[0];
-                            if (file.type.startsWith('image/')) {
-                                const reader = new FileReader();
-                                reader.onload = function(e) {
-                                    previewImg.src = e.target.result;
-                                    previewImg.style.display = 'block';
-                                    fileName.textContent = file.name;
-                                    filePreview.classList.remove('d-none');
-                                    document.getElementById('uploadSuccess').classList.remove('d-none');
+                        selectedFiles.innerHTML = '';
+                        let isValid = true;
+
+                        if (this.files.length > 0) {
+                            Array.from(this.files).forEach(file => {
+                                const fileDiv = document.createElement('div');
+                                fileDiv.className = 'mb-2';
+                                
+                                if (file.size > maxFileSize) {
+                                    isValid = false;
+                                    fileDiv.innerHTML = `
+                                        <i class="fas fa-exclamation-triangle text-danger me-2"></i>
+                                        <span class="text-danger">${file.name} (${(file.size / (1024 * 1024)).toFixed(2)}MB) - File too large</span>
+                                    `;
+                                } else {
+                                    fileDiv.innerHTML = `
+                                        <i class="fas fa-file me-2"></i>
+                                        <span>${file.name} (${(file.size / (1024 * 1024)).toFixed(2)}MB)</span>
+                                    `;
                                 }
-                                reader.readAsDataURL(file);
-                            } else {
-                                previewImg.style.display = 'none';
-                                fileName.textContent = file.name;
-                                filePreview.classList.remove('d-none');
+                                selectedFiles.appendChild(fileDiv);
+                            });
+                            filePreview.classList.remove('d-none');
+                            if (isValid) {
                                 document.getElementById('uploadSuccess').classList.remove('d-none');
+                            } else {
+                                document.getElementById('uploadSuccess').classList.add('d-none');
                             }
-                            checkFormValidity();
                         } else {
                             filePreview.classList.add('d-none');
-                            previewImg.src = '';
-                            fileName.textContent = '';
                             document.getElementById('uploadSuccess').classList.add('d-none');
-                            checkFormValidity();
                         }
+                        
+                        checkFormValidity();
                     });
 
                     function checkFormValidity() {
@@ -299,9 +307,20 @@
                                 isValid = false;
                             }
                         });
+                        
                         if (!attachmentInput.files || !attachmentInput.files[0]) {
                             isValid = false;
                         }
+                        
+                        // Check file sizes
+                        if (attachmentInput.files) {
+                            Array.from(attachmentInput.files).forEach(file => {
+                                if (file.size > maxFileSize) {
+                                    isValid = false;
+                                }
+                            });
+                        }
+                        
                         submitBtn.disabled = !isValid;
                     }
 
