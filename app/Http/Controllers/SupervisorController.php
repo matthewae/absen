@@ -13,8 +13,18 @@ class SupervisorController extends Controller
 
     public function index()
     {
-        $workProgress = \App\Models\WorkProgress::with(['user', 'attachments'])->latest()->get();
-        $attendances = \App\Models\Attendance::with('user')->latest()->get();
+        $user = auth()->user();
+        $employeeIds = $user->employees()->pluck('staff_id');
+        
+        $workProgress = \App\Models\WorkProgress::with(['user', 'attachments'])
+            ->whereIn('user_id', $employeeIds)
+            ->latest()
+            ->get();
+            
+        $attendances = \App\Models\Attendance::with('user')
+            ->whereIn('user_id', $employeeIds)
+            ->latest()
+            ->get();
         
         return view('super', compact('workProgress', 'attendances'));
     }

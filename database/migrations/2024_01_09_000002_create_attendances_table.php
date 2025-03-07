@@ -14,7 +14,7 @@ return new class extends Migration
             $table->date('date');
             $table->time('time_in')->nullable();
             $table->time('time_out')->nullable();
-            $table->enum('status', ['present', 'absent', 'late', 'leave'])->default('absent');
+            $table->enum('status', ['present', 'absent', 'late', 'leave', 'leave_pending', 'leave_approved', 'leave_rejected'])->default('absent');
             $table->text('notes')->nullable();
             $table->timestamps();
 

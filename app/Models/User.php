@@ -49,6 +49,11 @@ class User extends Authenticatable
         return isset($this->attributes['photo']) ? $this->attributes['photo'] : null;
     }
 
+    public function employees()
+    {
+        return $this->hasMany(User::class, 'supervisor_id', 'staff_id');
+    }
+
     public function attendances()
     {
         return $this->hasMany(Attendance::class);
@@ -57,11 +62,6 @@ class User extends Authenticatable
     public function supervisor()
     {
         return $this->belongsTo(User::class, 'supervisor_id');
-    }
-
-    public function employees()
-    {
-        return $this->hasMany(User::class, 'supervisor_id');
     }
 
     public function workProgress()

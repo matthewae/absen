@@ -39,6 +39,7 @@ Route::prefix('supervisor')->name('supervisor.')->group(function () {
 // Supervisor Routes (No Auth Required)
 Route::prefix('supervisor')->name('supervisor.')->group(function () {
     Route::get('/dashboard', [SupervisorDashboardController::class, 'index'])->name('dashboard');
+    Route::get('/schedule', [ScheduleController::class, 'index'])->name('schedule');
     Route::put('/work-progress/{workProgress}/status', [SupervisorDashboardController::class, 'updateWorkProgressStatus'])
         ->name('work-progress.status');
 });
@@ -93,6 +94,7 @@ Route::middleware(['auth'])->group(function () {
 
     // Profile Routes
     Route::get('/pro', function () { return view('pro'); })->name('pro');
+    Route::get('/profile/edit', function () { return view('pro'); })->name('profile.edit');
     Route::get('/set', function () { return view('set', ['user' => auth()->user()]); })->name('set');
     Route::put('/profile/update-photo', [UserController::class, 'updatePhoto'])->name('profile.update-photo');
     Route::post('/update-email', [UserController::class, 'updateEmail'])->name('update.email');

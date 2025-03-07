@@ -13,7 +13,7 @@ class SupervisorDashboardController extends Controller
     {
         $user = auth()->user();
         
-        $employeeIds = $user->employees->pluck('id');
+        $employeeIds = $user->employees->pluck('staff_id');
 
         $workProgress = WorkProgress::whereIn('user_id', $employeeIds)
             ->with('user')
