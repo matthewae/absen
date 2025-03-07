@@ -5,8 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Profile - {{ config('app.name', 'Laravel') }}</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         :root {
             --primary-color: #2c3e50;
@@ -15,16 +15,10 @@
             --text-color: #2c3e50;
             --bg-light: #f8f9fa;
             --transition: all 0.3s ease;
-            --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-            --hover-transform: translateY(-5px);
         }
 
         body {
-            font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
-            background-color: var(--bg-light);
-            color: var(--text-color);
-            letter-spacing: 0.025em;
-            line-height: 1.6;
+            background-color: #f8f9fa;
         }
 
         .sidebar {
@@ -33,13 +27,6 @@
             color: white;
             padding-top: 20px;
             transition: var(--transition);
-        }
-
-        .sidebar h4 {
-            color: var(--accent-color);
-            font-weight: 700;
-            padding: 0 20px;
-            margin-bottom: 30px;
         }
 
         .sidebar .nav-link {
@@ -65,63 +52,17 @@
 
         .card {
             border: none;
-            box-shadow: var(--card-shadow);
-            border-radius: 1.5rem;
-            transition: var(--transition);
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-        }
-
-        .card:hover {
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-            transform: var(--hover-transform);
+            box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+            border-radius: 1rem;
         }
 
         .profile-photo {
-            width: 300px;
-            height: 400px;
+            width: 200px;
+            height: 200px;
             object-fit: cover;
-            border: 4px solid white;
-            border-radius: 1.5rem;
-            box-shadow: var(--card-shadow);
-            transition: var(--transition);
-            filter: brightness(1.02);
-        }
-
-        .profile-photo:hover {
-            transform: var(--hover-transform);
-            filter: brightness(1.05);
-        }
-
-        .personal-info h6 {
-            color: var(--primary-color);
-            font-weight: 600;
-            margin-bottom: 0.5rem;
-            font-size: 0.95rem;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-
-        .text-secondary {
-            color: #6c757d !important;
-            font-size: 1.1rem;
-            font-weight: 500;
-        }
-
-        .btn-primary {
-            background-color: var(--primary-color);
-            border-color: var(--primary-color);
-            transition: var(--transition);
-            padding: 0.75rem 1.5rem;
-            font-weight: 600;
-            letter-spacing: 0.025em;
-            border-radius: 0.75rem;
-        }
-
-        .btn-primary:hover {
-            background-color: var(--secondary-color);
-            border-color: var(--secondary-color);
-            transform: translateY(-1px);
+            border-radius: 50%;
+            border: 5px solid #fff;
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
         }
     </style>
 </head>
@@ -142,7 +83,7 @@
                     <a class="nav-link {{ request()->routeIs('jdwl') ? 'active' : '' }}" href="{{ route('jdwl') }}">
                         <i class="fas fa-calendar"></i> Schedule
                     </a>
-                    <a href="{{ route('work-progress.index') }}" class="nav-link {{ request()->routeIs('work-progress.index') ? 'active' : '' }}">
+                    <a href="{{ route('work-progress') }}" class="nav-link {{ request()->routeIs('work-progress') ? 'active' : '' }}">
                         <i class="fas fa-tasks"></i> Work Progress
                     </a>
                     <a class="nav-link {{ request()->routeIs('pro') ? 'active' : '' }}" href="{{ route('pro') }}">
@@ -159,72 +100,86 @@
                     </form>
                 </nav>
             </div>
-
+    
             <!-- Main content -->
-            <main class="col-md-10 ms-sm-auto col-lg-10 px-md-4 main-content">
-                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-4 border-bottom">
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 main-content">
+                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
                     <h1 class="h2">Profile Information</h1>
                 </div>
 
-                <div class="row g-4">
-                    <div class="col-md-4">
-                        <div class="card text-center p-5 mb-4">
+                <div class="row">
+                    <div class="col-md-4 text-center mb-4">
+                        <div class="card">
                             <div class="card-body">
-                                <div class="position-relative mb-4">
-                                    <img src="{{ Auth::user()->photo ? 'data:image/jpeg;base64,'.Auth::user()->photo : 'https://via.placeholder.com/200x200' }}"
-                                        alt="Profile Photo"
-                                        class="profile-photo mb-3">
-                                </div>
-                                <h4 class="card-title mb-2">{{ Auth::user()->name }}</h4>
-                                <p class="card-text text-secondary mb-0">{{ Auth::user()->position ?? 'Position Not Set' }}</p>
-                                <p class="card-text text-secondary mb-3">{{ Auth::user()->department ?? 'Department Not Set' }}</p>
-                                <form action="{{ route('profile.update-photo') }}" method="POST" enctype="multipart/form-data">
+                                <img src="{{ Storage::url(Auth::user()->photo_path) }}"
+                                    alt="Profile Photo"
+                                    class="profile-photo mb-3">
+                                <form action="{{ route('profile.update-photo') }}" method="POST" enctype="multipart/form-data" class="mb-3">
                                     @csrf
                                     @method('PUT')
-                                    <label for="photo" class="btn btn-primary btn-sm w-auto px-3">
-                                        <i class="fas fa-camera"></i> Change Photo
-                                    </label>
-                                    <input type="file" id="photo" name="photo" class="d-none" accept="image/*" onchange="this.form.submit()">
+                                    <div class="input-group">
+                                        <input type="file" class="form-control" name="photo" accept="image/*" required>
+                                        <button type="submit" class="btn btn-primary">Update Photo</button>
+                                    </div>
+                                    @error('photo')
+                                        <span class="text-danger small">{{ $message }}</span>
+                                    @enderror
                                 </form>
+                                <h4 class="card-title">{{ Auth::user()->name }}</h4>
+                                <p class="card-text text-muted">{{ Auth::user()->email }}</p>
                             </div>
                         </div>
                     </div>
                     <div class="col-md-8">
-                        <div class="card h-100">
-                            <div class="card-body p-5">
+                        <div class="card">
+                            <div class="card-body">
                                 <h5 class="card-title mb-4">Personal Information</h5>
-                                <div class="row g-4 personal-info animate__animated animate__fadeIn">
-                                    <div class="col-sm-6">
-                                        <h6>Full Name</h6>
-                                        <p class="text-secondary">{{ Auth::user()->name }}</p>
+                                <div class="row mb-3">
+                                    <div class="col-sm-3">
+                                        <h6 class="mb-0">Full Name</h6>
                                     </div>
-                                    <div class="col-sm-6">
-                                        <h6>Email</h6>
-                                        <p class="text-secondary">{{ Auth::user()->email }}</p>
+                                    <div class="col-sm-9 text-secondary">
+                                        {{ Auth::user()->name }}
                                     </div>
-                                    <div class="col-sm-6">
-                                        <h6>Department</h6>
-                                        <p class="text-secondary">{{ Auth::user()->department ?? 'Not set' }}</p>
+                                </div>
+                                <div class="row mb-3">
+                                    <div class="col-sm-3">
+                                        <h6 class="mb-0">Email</h6>
                                     </div>
-                                    <div class="col-sm-6">
-                                        <h6>Position</h6>
-                                        <p class="text-secondary">{{ Auth::user()->position ?? 'Not set' }}</p>
+                                    <div class="col-sm-9 text-secondary">
+                                        {{ Auth::user()->email }}
                                     </div>
-                                    <div class="col-sm-6">
-                                        <h6>Birth Date</h6>
-                                        <p class="text-secondary">{{ Auth::user()->birth_date ? date('d F Y', strtotime(Auth::user()->birth_date)) : 'Not set' }}</p>
+                                </div>
+                                <div class="row mb-3">
+                                    <div class="col-sm-3">
+                                        <h6 class="mb-0">Department</h6>
                                     </div>
-                                    <div class="col-sm-6">
-                                        <h6>Annual Leave Quota</h6>
-                                        <p class="text-secondary">{{ Auth::user()->annual_leave_quota }} days</p>
+                                    <div class="col-sm-9 text-secondary">
+                                        {{ Auth::user()->department ?? 'Not set' }}
                                     </div>
-                                    <div class="col-sm-6">
-                                        <h6>Remaining Leave</h6>
-                                        <p class="text-secondary">{{ Auth::user()->remaining_leave }} days</p>
+                                </div>
+                                <div class="row mb-3">
+                                    <div class="col-sm-3">
+                                        <h6 class="mb-0">Position</h6>
                                     </div>
-                                    <div class="col-sm-6">
-                                        <h6>Used Leave</h6>
-                                        <p class="text-secondary">{{ Auth::user()->used_leave }} days</p>
+                                    <div class="col-sm-9 text-secondary">
+                                        {{ Auth::user()->position ?? 'Not set' }}
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <div class="col-sm-3">
+                                        <h6 class="mb-0">Birth Date</h6>
+                                    </div>
+                                    <div class="col-sm-9 text-secondary">
+                                        {{ Auth::user()->birth_date ? date('d F Y', strtotime(Auth::user()->birth_date)) : 'Not set' }}
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <h6 class="mb-0">Join Date</h6>
+                                    </div>
+                                    <div class="col-sm-9 text-secondary">
+                                        {{ date('d F Y', strtotime(Auth::user()->created_at)) }}
                                     </div>
                                 </div>
                             </div>
@@ -235,7 +190,7 @@
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 
 </html>

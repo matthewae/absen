@@ -23,8 +23,14 @@ class ProfileController extends Controller
         $user = Auth::user();
 
         if ($request->hasFile('photo')) {
-            $photoContent = base64_encode(file_get_contents($request->file('photo')->getRealPath()));
-            $user->photo = $photoContent;
+            // Delete old photo if exists
+            if ($user->photo_path && Storage::disk('public')->exists($user->photo_path)) {
+                Storage::disk('public')->delete($user->photo_path);
+            }
+
+            // Store new photo
+            $path = $request->file('photo')->store('profile-photos', 'public');
+            $user->photo_path = $path;
             $user->save();
 
             return redirect()->back()->with('success', 'Profile photo updated successfully');

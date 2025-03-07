@@ -81,6 +81,26 @@
                 max-width: none !important;
             }
         }
+        .sidebar .nav-link {
+            color: #FFD700;
+            padding: 12px 20px;
+            margin: 5px 15px;
+            border-radius: 8px;
+            transition: var(--transition);
+        }
+
+        .sidebar .nav-link:hover,
+        .sidebar .nav-link.active {
+            background-color: var(--secondary-color);
+            color: var(--accent-color);
+            transform: translateX(5px);
+        }
+
+        .sidebar .nav-link i {
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
+        }
     </style>
 </head>
 <body>
@@ -89,13 +109,13 @@
         <div class="sidebar p-3" style="width: 250px;">
             <h4><i class="fas fa-shield-alt me-2"></i>Supervisor</h4>
             <div class="nav flex-column">
-                <a href="#" class="nav-link text-white active">
+                <a href="{{ route('primary') }}" class="nav-link text-white active">
                     <i class="fas fa-tachometer-alt me-2"></i>Dashboard
                 </a>
-                <a href="#" class="nav-link text-white">
+                <a href="{{ route('spvschedule') }}" class="nav-link text-white">
                     <i class="fas fa-calendar-alt me-2"></i>Schedule
                 </a>
-                <a href="#" class="nav-link text-white">
+                <a href="set" class="nav-link text-white">
                     <i class="fas fa-cog me-2"></i>Settings
                 </a>
                 <form action="{{ route('logout') }}" method="POST" class="mt-auto">
@@ -194,9 +214,36 @@
                                                     <small class="text-danger d-block">Out: {{ $attendance->time_out ? $attendance->time_out->format('H:i') : '-' }}</small>
                                                 </td>
                                                 <td>
-                                                    <span class="badge bg-{{ $attendance->status === 'present' ? 'success' : 'danger' }} rounded-pill px-3">
-                                                        {{ ucfirst($attendance->status) }}
+                                                    @if($attendance->status === 'leave_pending')
+                                                    <div class="d-flex align-items-center gap-2">
+                                                        <span class="badge bg-warning rounded-pill px-3">Leave Pending</span>
+                                                        <div class="btn-group">
+                                                            <form action="{{ route('supervisor.attendance.approve', $attendance->id) }}" method="POST" class="d-inline">
+                                                                @csrf
+                                                                @method('PATCH')
+                                                                <button type="submit" class="btn btn-sm btn-success" title="Approve Leave">
+                                                                    <i class="fas fa-check"></i>
+                                                                </button>
+                                                            </form>
+                                                            <form action="{{ route('supervisor.attendance.reject', $attendance->id) }}" method="POST" class="d-inline">
+                                                                @csrf
+                                                                @method('PATCH')
+                                                                <button type="submit" class="btn btn-sm btn-danger" title="Reject Leave">
+                                                                    <i class="fas fa-times"></i>
+                                                                </button>
+                                                            </form>
+                                                        </div>
+                                                        @if($attendance->leave_proof)
+                                                        <a href="{{ asset('storage/' . $attendance->leave_proof) }}" target="_blank" class="btn btn-sm btn-info" title="View Leave Document">
+                                                            <i class="fas fa-file-medical"></i>
+                                                        </a>
+                                                        @endif
+                                                    </div>
+                                                    @else
+                                                    <span class="badge bg-{{ $attendance->status === 'present' ? 'success' : ($attendance->status === 'leave_approved' ? 'info' : 'danger') }} rounded-pill px-3">
+                                                        {{ ucfirst(str_replace('_', ' ', $attendance->status)) }}
                                                     </span>
+                                                    @endif
                                                 </td>
                                             </tr>
                                             @endforeach
@@ -238,14 +285,22 @@
                                                     <p class="mb-2"><i class="fas fa-tag me-2 text-primary"></i><strong>Category:</strong> {{ $progress->category }}</p>
                                                     <p class="mb-2"><i class="fas fa-heading me-2 text-primary"></i><strong>Title:</strong> {{ $progress->title }}</p>
                                                     <p class="mb-2"><i class="fas fa-align-left me-2 text-primary"></i><strong>Description:</strong> {{ $progress->description }}</p>
-                                                    @if($progress->attachment)
-                                                    <p class="mb-0">
+                                                    @if($progress->attachments->count() > 0)
+                                                    <div class="mb-0">
                                                         <i class="fas fa-paperclip me-2 text-primary"></i>
-                                                        <strong>Attachment:</strong> 
-                                                        <a href="{{ asset('storage/' . $progress->attachment) }}" target="_blank" class="btn btn-sm btn-outline-primary ms-2">
-                                                            <i class="fas fa-download me-1"></i>Download
-                                                        </a>
-                                                    </p>
+                                                        <strong>Attachments:</strong>
+                                                        <div class="mt-2">
+                                                            @foreach($progress->attachments as $attachment)
+                                                            <div class="d-flex align-items-center mb-2">
+                                                                <i class="fas fa-file me-2 text-secondary"></i>
+                                                                <span class="me-2">{{ $attachment->file_name }}</span>
+                                                                <a href="{{ asset('storage/' . $attachment->file_path) }}" target="_blank" class="btn btn-sm btn-outline-primary">
+                                                                    <i class="fas fa-download me-1"></i>Download
+                                                                </a>
+                                                            </div>
+                                                            @endforeach
+                                                        </div>
+                                                    </div>
                                                     @endif
                                                 </div>
                                             </div>

@@ -12,7 +12,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->enum('category', ['Perencanaan', 'Pengawasan', 'Kajian']);
-            $table->enum('status', ['pending', 'revision', 'approved'])->default('pending');
+            $table->enum('status', ['pending', 'revision', 'approved','completed'])->default('pending');
             $table->string('title');
             $table->text('description');
             $table->string('attachment')->nullable();

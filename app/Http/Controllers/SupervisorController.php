@@ -13,7 +13,10 @@ class SupervisorController extends Controller
 
     public function index()
     {
-        return view('super');
+        $workProgress = \App\Models\WorkProgress::with(['user', 'attachments'])->latest()->get();
+        $attendances = \App\Models\Attendance::with('user')->latest()->get();
+        
+        return view('super', compact('workProgress', 'attendances'));
     }
 
     public function showLoginForm()

@@ -46,6 +46,10 @@ Route::middleware(['auth'])->group(function () {
 
     // Dashboard Routes
     Route::get('/primary', function () { return view('primary'); })->name('primary');
+    Route::get('/spvschedule', function () {
+        $staffMembers = \App\Models\User::where('role', 'staff')->get();
+        return view('SPVSchedule', compact('staffMembers'));
+    })->name('spvschedule');
     Route::get('/home', [SupervisorDashboardController::class, 'index'])->name('home');
 
     // Attendance Routes
