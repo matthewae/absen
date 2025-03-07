@@ -51,10 +51,10 @@ Route::middleware(['auth'])->group(function () {
         return view('jdwl', ['attendances' => $attendances]);
     })->name('jdwl');
     Route::get('/work-progress', function () { 
-        $workProgress = \App\Models\WorkProgress::where('user_id', auth()->id())
-            ->orderBy('created_at', 'desc')
+        $workProgresses = \App\Models\WorkProgress::where('user_id', auth()->id())
+            ->latest()
             ->get();
-        return view('work-progress', ['workProgress' => $workProgress]); 
+        return view('work-progress', compact('workProgresses')); 
     })->name('work-progress');
     Route::post('/work-progress', [App\Http\Controllers\WorkProgressController::class, 'store'])->name('work-progress.store');
     Route::put('/work-progress/{id}', [App\Http\Controllers\WorkProgressController::class, 'update'])->name('work-progress.update');

@@ -351,18 +351,22 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach($workProgress as $progress)
+                            @forelse($workProgresses as $progress)
                             <tr>
                                 <td>{{ $progress->created_at->format('Y-m-d H:i') }}</td>
                                 <td>{{ $progress->title }}</td>
-                                <td>{{ $progress->description }}</td>
+                                <td>{{ Str::limit($progress->description, 100) }}</td>
                                 <td>
                                     <span class="progress-status status-{{ $progress->status }}">
                                         {{ ucfirst($progress->status) }}
                                     </span>
                                 </td>
                             </tr>
-                            @endforeach
+                            @empty
+                            <tr>
+                                <td colspan="4" class="text-center py-3">No work progress records found.</td>
+                            </tr>
+                            @endforelse
                         </tbody>
                     </table>
                 </div>
