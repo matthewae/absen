@@ -71,20 +71,24 @@ Route::middleware(['auth'])->group(function () {
         $attendances = \App\Models\Attendance::where('user_id', auth()->id())
             ->orderBy('date', 'desc')
             ->get();
-        return view('jdwl', ['attendances' => $attendances]);
+        $schedules = \App\Models\Schedule::where('staff_id', auth()->id())->get();
+        return view('jdwl', ['attendances' => $attendances, 'schedules' => $schedules]);
     })->name('jdwl');
 
+    // Schedule Routes
+    Route::get('/schedule', [ScheduleController::class, 'index'])->name('schedule');
+
     // Work Progress Routes
-    Route::prefix('work-progress')->name('work-progress.')->group(function () {
+    Route::prefix('work-progress')->group(function () {
         Route::get('/', function () { 
             $workProgresses = \App\Models\WorkProgress::where('user_id', auth()->id())
                 ->latest()
                 ->get();
             return view('work-progress', compact('workProgresses')); 
-        })->name('index');
-        Route::post('/', [WorkProgressController::class, 'store'])->name('store');
-        Route::put('/{id}', [WorkProgressController::class, 'update'])->name('update');
-        Route::delete('/{id}', [WorkProgressController::class, 'destroy'])->name('destroy');
+        })->name('work-progress');
+        Route::post('/', [WorkProgressController::class, 'store'])->name('work-progress.store');
+        Route::put('/{id}', [WorkProgressController::class, 'update'])->name('work-progress.update');
+        Route::delete('/{id}', [WorkProgressController::class, 'destroy'])->name('work-progress.destroy');
     });
 
     // Profile Routes

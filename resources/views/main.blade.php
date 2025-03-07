@@ -175,7 +175,7 @@
                     <i class="fas fa-user"></i>
                     Profile
                 </a>
-                <a href="{{ route('settings') }}" class="menu-item {{ Request::is('settings') ? 'active' : '' }}">
+                <a href="{{ route('set') }}" class="menu-item {{ Request::is('set') ? 'active' : '' }}">
                     <i class="fas fa-cog"></i>
                     Settings
                 </a>
